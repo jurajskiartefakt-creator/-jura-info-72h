@@ -5,7 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>JURA INFO 72H – wersja poprawiona</title>
+<title>JURA INFO 72H</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="application-name" content="JURA INFO 72H">
+<meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="JURA INFO 72H – test odporności informacyjnej w sytuacji kryzysowej.">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f5f7fb;color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -25,8 +33,14 @@ hr{border:0;border-top:1px solid #e5e7eb;margin:20px 0}
 </style>
 </head>
 <body>
+<div id="appInstallBar" style="display:none;position:sticky;top:0;z-index:20;background:#172554;color:#fff;padding:10px 14px;font-size:14px;font-weight:700;text-align:center">
+  JURA INFO 72H • aplikacja projektowa
+  <span style="display:block;font-size:12px;font-weight:500;opacity:.85;margin-top:2px">Dodaj do ekranu początkowego, aby uruchamiać jak aplikację.</span>
+</div>
 <div class="wrap">
-<header><span class="tag">JURA INFO 72H</span><h1>Odporność informacyjna</h1><div class="muted">Test kompetencji informacyjnych młodzieży</div></header>
+<header><span class="tag">JURA INFO 72H</span><h1>Odporność informacyjna</h1><div class="muted">Test kompetencji informacyjnych młodzieży</div><div class="small" style="margin:4px 4px 12px;display:flex;justify-content:space-between;gap:10px">
+<span>JURA INFO 72H • v1.1</span><span id="offlineStatus">● online</span>
+</div></header>
 
 <div id="home" class="card">
 <h2>Wybierz badanie</h2>
@@ -107,5 +121,22 @@ function renderAdmin(){let r=JSON.parse(localStorage.getItem("jura72h")||"[]");i
 function exportCSV(){let r=JSON.parse(localStorage.getItem("jura72h")||"[]");if(!r.length){alert("Brak wyników.");return}let csv="ID;Tryb;Wynik;Data\n"+r.map(x=>x.id+";"+x.tryb+";"+x.wynik+";"+x.data).join("\n");let blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="JURA_INFO_72H_wyniki.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function clearResults(){if(confirm("Usunąć wszystkie wyniki z tego urządzenia?")){localStorage.removeItem("jura72h");renderAdmin()}}
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+function updateOnlineStatus(){
+  const el=document.getElementById('offlineStatus');
+  if(!el) return;
+  el.textContent=navigator.onLine?'● online':'● offline — dane lokalne';
+}
+window.addEventListener('online',updateOnlineStatus);
+window.addEventListener('offline',updateOnlineStatus);
+window.addEventListener('load',updateOnlineStatus);
+</script>
+
 </body>
 </html>
