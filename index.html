@@ -19,6 +19,31 @@
 <section id="result" class="card hidden"><span class="badge" id="resultSchool"></span><span class="badge" id="resultMode"></span><h2>Wynik badania</h2><div class="score"><span id="score"></span>/10</div><p id="interpret" class="lead"></p><div id="saveInfo" class="status">Zapisywanie wyniku…</div><button onclick="newTest()">Nowe badanie</button><button class="ghost" onclick="showPanel()">Panel prowadzącego</button></section>
 <section id="panel" class="card hidden"><h2>Panel prowadzącego</h2><p class="small">Widoczne są wyniki zapisane lokalnie na tym urządzeniu. Wyniki centralne są przechowywane w arkuszu Google.</p><div id="stats"></div><div class="scroll"><table><thead><tr><th>Data</th><th>Kod</th><th>Typ</th><th>Tryb</th><th>Wynik</th><th>Wiek</th><th>Klasa</th></tr></thead><tbody id="rows"></tbody></table></div><button onclick="exportCSV()">Eksport CSV</button><button class="ghost" onclick="goHome()">Wróć</button></section>
 <div class="footer">JURA INFO 72H · wersja centralna 2.0 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ</div>
+
+<section class="card" id="contactFooter" style="margin-top:24px;">
+  <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+    <img src="assets/logo-szansa.jpg" alt="Stowarzyszenie Szansa – logo"
+         style="width:min(100%,430px);height:auto;border-radius:10px;">
+  </div>
+  <div style="margin-top:16px;line-height:1.55;">
+    <strong>Stowarzyszenie „Szansa” w Zawierciu</strong><br>
+    ul. Anny Jagiellonki 15, 42-400 Zawiercie<br>
+    KRS: 0000306852 · NIP: 6492232534 · REGON: 240935408<br>
+    Kontakt: 531 994 481 · jurajskiartefakt@gmail.com
+  </div>
+  <div style="margin-top:14px;line-height:1.55;">
+    <strong>Partner / zaplecze organizacyjne</strong><br>
+    Fundacja Jurajski Artefakt<br>
+    ul. Piłsudskiego 7, 42-400 Zawiercie<br>
+    KRS: 0000658656 · NIP: 6492307666 · REGON: 366345066
+  </div>
+  <div style="margin-top:14px;font-size:.88em;opacity:.78;line-height:1.5;">
+    © 2026 Stowarzyszenie „Szansa” w Zawierciu. JURA INFO 72H.<br>
+    Materiał i aplikacja przeznaczone do celów edukacyjnych i diagnostycznych.
+    Wszelkie prawa zastrzeżone.
+  </div>
+</section>
+
 </main>
 <script>
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
