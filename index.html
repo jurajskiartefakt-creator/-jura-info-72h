@@ -22,9 +22,9 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px
 <p>Anonimowe narzędzie diagnostyczno-ewaluacyjne odporności informacyjnej.</p>
 <p class="small">ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ</p></div>
 
-<section id="home" class="card"><h2>1. Kod uczestnika</h2>
-<p class="small">Nie wpisuj imienia ani nazwiska. Użyj kodu ustalonego przez prowadzącego.</p>
-<input id="pid" maxlength="30" placeholder="np. JURA INFO SP-001"><button onclick="startMeta()">Dalej</button></section>
+<section id="home" class="card"><h2>1. Zaloguj się kodem uczestnika</h2>
+<p class="small">Użyj tego samego kodu przy PRE i późniejszym POST. Nie wpisuj imienia ani nazwiska.</p>
+<input id="pid" maxlength="30" placeholder="np. JURA INFO SP-001"><button onclick="loginParticipant()">Dalej</button><div id="loginStatus" class="small"></div></section>
 
 <section id="meta" class="card hidden"><h2>2. Kilka informacji o Tobie</h2>
 <p class="small">Pytania służą wyłącznie do analizy zbiorczej. Możesz wybrać „wolę nie podawać”.</p>
@@ -40,41 +40,33 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px
 <label>Czy zdarzyło Ci się udostępnić informację, a później dowiedzieć się, że była nieprawdziwa?</label>
 <select id="mistake"><option value="">Wybierz</option><option>tak</option><option>nie</option><option>nie wiem</option><option>wolę nie podawać</option></select>
 <div class="notice"><b>Ważne:</b> nie wpisuj danych pozwalających na bezpośrednie rozpoznanie Ciebie.</div>
-<button onclick="startTest('PRE')">Rozpocznij PRE</button></section>
+<button onclick="startPreFromMeta()">Rozpocznij PRE</button></section>
 
 <section id="quiz" class="card hidden"><div class="small"><span id="mode"></span> • pytanie <span id="num"></span>/10</div>
 <h2 id="question"></h2><div id="answers"></div><button id="next" onclick="nextQ()">Dalej</button></section>
 
-<section id="unlock" class="card hidden"><h2>POST po zakończeniu działania</h2><p id="unlockMsg" class="notice"></p><p class="small">Użyj tego samego kodu uczestnika co przy PRE. Kod odblokowania otrzymasz od prowadzącego dopiero po zakończeniu ćwiczenia, zajęć lub działania projektu.</p><label>Kod odblokowania POST</label><input id="unlockCode" type="password" maxlength="30" placeholder="Kod od prowadzącego"><button onclick="unlockPost()">Odblokuj POST</button><button class="alt" onclick="hideAll();$('home').classList.remove('hidden');$('pid').value='';">Wróć</button></section>
-
 <section id="result" class="card hidden"><h2>Wynik</h2><div class="score" id="score"></div><div id="interp"></div><div id="saveInfo" class="notice"></div>
-<div id="postGate" class="hidden"><h3>POST po zakończeniu działania</h3><p class="small">Test POST jest dostępny dopiero dla tego samego kodu uczestnika, po wykonaniu PRE i zakończeniu działania projektu.</p><button onclick="startPostIfAllowed()">Rozpocznij POST</button></div><button class="alt" onclick="showPanel()">Panel prowadzącego</button></section>
+<div id="resultNext" class="notice"></div><button class="alt" onclick="showPanel()">Panel prowadzącego</button></section>
 
 <section id="panel" class="card hidden"><h2>Panel prowadzącego</h2><div id="panelBody"></div>
 <button onclick="exportCSV()">Eksport CSV</button><button class="alt" onclick="clearResults()">Wyczyść wyniki na tym urządzeniu</button></section>
-</div><iframe id="statusFrame" title="status" style="display:none"></iframe>
+</div>
 <script>
 const PRE=[{"q": "Na klasowej grupie ktoś pisze: „Jutro na pewno nie ma lekcji”, ale nie podaje źródła. Co robisz najpierw?", "a": ["Od razu przekazuję to rodzicom.", "Sprawdzam informację w oficjalnym źródle szkoły.", "Zakładam, że ktoś z klasy wie lepiej.", "Udostępniam wiadomość innym klasom."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Widzisz film, który ma pokazywać niezwykłe wydarzenie. Film jest bardzo emocjonalny. Co warto zrobić?", "a": ["Udostępnić, zanim zniknie.", "Sprawdzić, kto go opublikował i czy są inne źródła.", "Uznać go za prawdziwy, bo wygląda realistycznie.", "Ocenić prawdziwość tylko po komentarzach."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Post ma dużo polubień i komentarzy. Czy to oznacza, że informacja jest prawdziwa?", "a": ["Tak, dużo osób ją widziało.", "Nie. Popularność nie jest dowodem prawdziwości.", "Tak, jeśli komentarze są zgodne.", "Tak, jeśli post jest ładnie przygotowany."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz wiadomość: „Jeśli tego nie wyślesz 10 osobom, stanie się coś złego”. Co robisz?", "a": ["Wysyłam, żeby nic się nie stało.", "Nie przekazuję jej i sprawdzam, czy to prawdziwa informacja.", "Wysyłam tylko najlepszym znajomym.", "Robię zdjęcie i publikuję je na swoim profilu."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Kolega wysłał Ci niesprawdzoną wiadomość o rzekomym zagrożeniu. Co jest odpowiedzialne?", "a": ["Przekazać ją dalej na wszelki wypadek.", "Powiedzieć, że informacja nie jest jeszcze sprawdzona i nie rozpowszechniać jej.", "Dodać własny komentarz, żeby była ciekawsza.", "Wysłać ją wszystkim dorosłym, których znam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "W wiadomości widzisz zdjęcie z podpisem „dzisiejsze”. Nie ma daty ani miejsca. Co może być problemem?", "a": ["Nic, zdjęcie jest dowodem.", "Zdjęcie może pochodzić z innego czasu lub miejsca.", "Zdjęcia zawsze są prawdziwe.", "Brak daty oznacza, że wiadomość jest pilna."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Dwa wiarygodnie wyglądające posty podają sprzeczne informacje. Co robisz?", "a": ["Wybieram ten, który bardziej mi się podoba.", "Szukam źródła pierwotnego i dodatkowego potwierdzenia.", "Wybieram ten z większą liczbą lajków.", "Udostępniam oba bez komentarza."], "c": 1, "area": "OCEŃ"}, {"q": "Ktoś wykorzystał nazwę szkoły i jej logo, aby wysłać sensacyjną wiadomość. Co powinno wzbudzić Twoją uwagę?", "a": ["Logo oznacza, że wiadomość na pewno jest oficjalna.", "Sama grafika nie potwierdza źródła — trzeba sprawdzić oficjalny kanał szkoły.", "Im bardziej oficjalnie wygląda, tym bardziej jest prawdziwa.", "Nie trzeba nic sprawdzać."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Kiedy informacja dotyczy zdrowia lub bezpieczeństwa, co jest szczególnie ważne?", "a": ["Żeby była krótka i straszna.", "Żeby pochodziła ze sprawdzonego źródła i była potwierdzona.", "Żeby miała dużo udostępnień.", "Żeby wysłał ją ktoś znajomy."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Przed udostępnieniem informacji o zagrożeniu najlepiej:", "a": ["Sprawdzić źródło, datę, kontekst i potwierdzenie w innym wiarygodnym miejscu.", "Udostępnić ją jak najszybciej.", "Zmienić nagłówek na bardziej ostrzegawczy.", "Poprosić kolegę, żeby zdecydował za mnie."], "c": 0, "area": "PRZEKAŻ"}],POST=[{"q": "Na czacie pojawia się informacja, że lekcje zostaną skrócone. Nikt nie podaje źródła. Co robisz?", "a": ["Sprawdzam oficjalną informację szkoły, zanim w nią uwierzę lub ją przekażę.", "Wysyłam ją wszystkim.", "Zakładam, że skoro ktoś napisał, to wie.", "Czekam na więcej emotikonów."], "c": 0, "area": "SPRAWDŹ"}, {"q": "Widzisz bardzo realistyczne zdjęcie przedstawiające rzekome wydarzenie. Co może pomóc w ocenie?", "a": ["Tylko to, czy zdjęcie wygląda prawdziwie.", "Źródło, data, miejsce, kontekst i niezależne potwierdzenie.", "Liczba komentarzy.", "To, czy zdjęcie jest kolorowe."], "c": 1, "area": "OCEŃ"}, {"q": "Kolega mówi: „Wszyscy tak piszą, więc to prawda”. Jak odpowiadasz?", "a": ["Ma rację, skoro wszyscy tak piszą.", "Popularność informacji nie jest dowodem jej prawdziwości.", "Tak, jeśli post ma dużo reakcji.", "Prawda zależy od liczby komentarzy."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz pilne ostrzeżenie bez autora i bez linku do źródła. Co robisz?", "a": ["Natychmiast je udostępniam.", "Zatrzymuję się i szukam potwierdzenia w wiarygodnym źródle.", "Dodaję własne ostrzeżenie.", "Wysyłam je tylko jednej osobie."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Informacja o bezpieczeństwie może wywoływać silny strach. Co jest rozsądne?", "a": ["Udostępnić ją natychmiast, żeby nikt nie był zaskoczony.", "Najpierw sprawdzić informację i dopiero zdecydować, co przekazać.", "Uznać, że im bardziej straszna, tym bardziej prawdziwa.", "Oceniać ją tylko po emocjach."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Znajdujesz tę samą informację na dwóch stronach, ale obie kopiują ten sam nieznany post. Co robisz?", "a": ["Uznaję, że są dwa niezależne potwierdzenia.", "Szukam źródła pierwotnego i niezależnego potwierdzenia.", "Udostępniam obie strony.", "Wybieram tę z lepszą grafiką."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Ktoś używa zdjęcia szkoły i podpisu dyrektora, ale wiadomość nie jest na stronie szkoły. Co robisz?", "a": ["Uznaję ją za oficjalną.", "Sprawdzam oficjalny kanał szkoły lub pytam szkołę inną wiarygodną drogą.", "Przesyłam ją dalej.", "Zakładam, że podpis jest wystarczającym dowodem."], "c": 1, "area": "OCEŃ"}, {"q": "Przyjaciel prosi Cię o szybkie przesłanie niepotwierdzonej informacji. Co robisz?", "a": ["Przesyłam, bo to przyjaciel.", "Mówię, że najpierw chcę ją sprawdzić.", "Przesyłam tylko do jednej grupy.", "Dodaję „chyba prawda” i wysyłam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "Gdy nie masz pewności, czy informacja jest prawdziwa, najlepszym rozwiązaniem jest:", "a": ["Przedstawić ją jako pewnik.", "Powstrzymać się od rozpowszechniania i sprawdzić źródła.", "Wybrać wersję, która pasuje do mojej opinii.", "Zapytać losową osobę w internecie."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Który zestaw najlepiej pomaga ocenić informację?", "a": ["Nagłówek + liczba lajków.", "Źródło + data + autor + kontekst + niezależne potwierdzenie.", "Kolor grafiki + liczba komentarzy.", "To, czy informacja jest zgodna z opinią znajomych."], "c": 1, "area": "OCEŃ"}];
 const STORAGE="jura72h_diag_sp_v1";
 let pid="",meta={},mode="",qs=[],i=0,scoreValue=0,answers=[];
+let pendingLoginId="";
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
 let centralLastStatus="";
-// POST odblokowuje wyłącznie prowadzący po zakończeniu działania.
-const POST_UNLOCK_CODE="JURA72H-POST";
 
 async function sendToCentral(record) {
-  const payload=JSON.stringify({action:"save",record:record});
   try {
-    // Primary: navigator.sendBeacon is designed for cross-origin background POSTs.
-    if (navigator.sendBeacon) {
-      const blob=new Blob([payload],{type:"text/plain;charset=UTF-8"});
-      const queued=navigator.sendBeacon(CENTRAL_ENDPOINT,blob);
-      if (queued) { centralLastStatus="queued"; return true; }
-    }
-  } catch(e) {}
-  try {
-    // Fallback: no-cors POST.
-    await fetch(CENTRAL_ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload,keepalive:true});
+    await fetch(CENTRAL_ENDPOINT,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=UTF-8"},
+      body:JSON.stringify({action:"save",record:record})
+    });
     centralLastStatus="sent";
     return true;
   } catch(e) {
@@ -82,83 +74,65 @@ async function sendToCentral(record) {
     return false;
   }
 }
-function $(id){return document.getElementById(id)}
-function hideAll(){["home","meta","quiz","unlock","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
-function resetToStart(){
-  pid=""; meta={}; mode=""; qs=[]; i=0; scoreValue=0; answers=[];
-  hideAll();
-  $("home").classList.remove("hidden");
-  $("pid").value="";
-  if($("unlockCode")) $("unlockCode").value="";
-}
-window.addEventListener("pageshow",function(){resetToStart();});
-function startMeta(){
-  pid=$("pid").value.trim();
-  if(!pid){alert("Wpisz kod uczestnika.");return;}
-  const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");
-  const hasPre=r.some(x=>x.id===pid && x.tryb==="PRE");
-  const hasPost=r.some(x=>x.id===pid && x.tryb==="POST");
-  if(hasPost){alert("Dla tego kodu wykonano już PRE i POST.");return;}
-  if(hasPre){
-    hideAll();
-    $("unlock").classList.remove("hidden");
-    $("unlockMsg").textContent="Kod rozpoznany. PRE tego uczestnika jest już zapisany. POST zostanie odblokowany dopiero po zakończeniu działania przez prowadzącego.";
-    $("unlockCode").value="";
+function $(id){return document.getElementById(id)}function hideAll(){["home","meta","quiz","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
+function loginParticipant(){
+  const code=$("pid").value.trim();
+  if(!code){alert("Wpisz kod uczestnika.");return;}
+  pid=code;
+  const records=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+  const pre=records.find(x=>x.id===pid && x.tryb==="PRE");
+  const post=records.find(x=>x.id===pid && x.tryb==="POST");
+  const st=$("loginStatus");
+  if(post){
+    st.innerHTML="✓ Dla tego kodu wykonano już PRE i POST. Możesz zakończyć udział.";
     return;
   }
+  if(pre){
+    meta=pre.meta||{};
+    st.innerHTML="✓ Znaleziono PRE dla tego samego kodu. Po zakończeniu zajęć możesz teraz wykonać POST.";
+    hideAll();$("result").classList.remove("hidden");
+    $("score").textContent=pre.wynik+"/10";
+    $("interp").innerHTML="<p class='small'>To wynik PRE zapisany dla tego kodu.</p>";
+    $("resultNext").innerHTML="<b>POST jest odblokowany dla tego samego kodu.</b><br><br><button onclick="startPostForSameId()">Rozpocznij POST</button>";
+    return;
+  }
+  pendingLoginId=pid;
   hideAll();$("meta").classList.remove("hidden");
 }
-function unlockPost(){
-  const code=$("unlockCode").value.trim();
-  if(!pid){alert("Najpierw wpisz kod uczestnika.");return;}
-  const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");
-  const hasPre=r.some(x=>x.id===pid && x.tryb==="PRE");
-  const hasPost=r.some(x=>x.id===pid && x.tryb==="POST");
-  if(!hasPre){alert("Dla tego kodu nie znaleziono wcześniejszego PRE.");return;}
-  if(hasPost){alert("Dla tego kodu POST został już wykonany.");return;}
-  if(code!==POST_UNLOCK_CODE){alert("Nieprawidłowy kod odblokowania. Kod wydaje prowadzący dopiero po zakończeniu działania.");return;}
-  mode="POST";qs=POST;i=0;scoreValue=0;answers=[];
-  hideAll();$("quiz").classList.remove("hidden");render();
+function startMeta(){loginParticipant()}
+function startPreFromMeta(){readMeta();startTest("PRE")}
+function startPostForSameId(){
+  const records=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+  const pre=records.find(x=>x.id===pid && x.tryb==="PRE");
+  if(!pre){alert("POST jest dostępny dopiero po wykonaniu PRE tym samym kodem.");return;}
+  meta=pre.meta||{};
+  startTest("POST");
 }
 function readMeta(){meta={wiek:$("age").value,klasa:$("class").value,plec:$("gender").value,internet:$("net").value,
 zrodla:[...document.querySelectorAll('input[name="source"]:checked')].map(x=>x.value),
 edukacja:$("education").value,sprawdzanie:$("checking").value,udostepnienie:$("mistake").value}}
-function startTest(m){
-  if(m!=="PRE"){return startPostIfAllowed();}
-  readMeta();
-  mode="PRE";qs=PRE;i=0;scoreValue=0;answers=[];
-  hideAll();$("quiz").classList.remove("hidden");render();
-}
-function startPostIfAllowed(){
-  alert("POST jest zablokowany. Po zakończeniu działania wróć z tym samym kodem uczestnika i uzyskaj kod odblokowania od prowadzącego.");
-}
+function startTest(m){readMeta();mode=m;qs=m==="PRE"?PRE:POST;i=0;scoreValue=0;answers=[];hideAll();$("quiz").classList.remove("hidden");render()}
 function render(){const q=qs[i];$("mode").textContent=mode;$("num").textContent=i+1;$("question").innerHTML=q.q;$("answers").innerHTML=q.a.map((a,n)=>`<label class="opt"><input type="radio" name="ans" value="${n}"><span>${a}</span></label>`).join("")}
 function nextQ(){const ch=document.querySelector('input[name="ans"]:checked');if(!ch){alert("Wybierz odpowiedź.");return}const n=Number(ch.value),q=qs[i];if(n===q.c)scoreValue++;answers.push({q:i+1,obszar:q.area,wybrana:n,poprawna:n===q.c});if(i<qs.length-1){i++;render()}else finish()}
 async function finish(){
-  const ok=await saveResult();
-  hideAll();$("result").classList.remove("hidden");$("score").textContent=scoreValue+"/10";
+  await saveResult();
+  hideAll();$("result").classList.remove("hidden");
+  $("score").textContent=scoreValue+"/10";
   $("interp").innerHTML="<p class='small'>Interpretacja robocza do ewaluacji projektu; wynik nie jest diagnozą psychologiczną.</p>";
-  $("postGate").classList.add("hidden");
+  if(mode==="PRE"){
+    $("resultNext").innerHTML="<b>PRE zakończony.</b><br>Teraz wykonaj zaplanowane zajęcia, ćwiczenie lub działanie projektu. Po jego zakończeniu wróć tutaj i zaloguj się <b>tym samym kodem</b>, aby odblokować POST.";
+  } else {
+    $("resultNext").innerHTML="<b>POST zakończony.</b><br>Wynik został zapisany. Udział dla tego kodu jest zakończony.";
+  }
 }
 async function saveResult(){
   const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta:meta,obszary:answers,typSzkoly:"SP"};
   let r=JSON.parse(localStorage.getItem(STORAGE)||"[]");
-  if(r.some(x=>x.id===pid && x.tryb===mode)){
-    $("saveInfo").textContent="Ten etap dla tego kodu został już wykonany na tym urządzeniu.";
-    return false;
-  }
-  localStorage.setItem(STORAGE,JSON.stringify(r.concat([record])));
+  r.push(record);
+  localStorage.setItem(STORAGE,JSON.stringify(r));
   const ok=await sendToCentral(record);
-  if(ok){
-    $("saveInfo").textContent = mode==="PRE"
-      ? "✓ Wynik PRE zapisany. POST pozostaje zablokowany do czasu zakończenia działania i odblokowania przez prowadzącego."
-      : "✓ Wynik POST zapisany.";
-  } else {
-    $("saveInfo").textContent = mode==="PRE"
-      ? "✓ Wynik PRE zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy."
-      : "✓ Wynik POST zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy.";
-  }
-  return true;
+  const info=$("saveInfo");
+  if(info) info.textContent=ok?"✓ Wynik zapisany na urządzeniu i wysłany do centralnej bazy.":"✓ Wynik zapisany na urządzeniu. Nie udało się teraz wysłać go do centralnej bazy — spróbujemy ponownie później.";
 }
 function showPanel(){hideAll();$("panel").classList.remove("hidden");const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");if(!r.length){$("panelBody").innerHTML="<p>Brak wyników.</p>";return}let pre=r.filter(x=>x.tryb==="PRE"),post=r.filter(x=>x.tryb==="POST"),avg=a=>a.length?(a.reduce((s,x)=>s+x.wynik,0)/a.length).toFixed(2):"—";$("panelBody").innerHTML=`<p><b>Zapisy:</b> ${r.length} | <b>PRE:</b> ${pre.length} | <b>POST:</b> ${post.length}</p><p><b>Średnia PRE:</b> ${avg(pre)}/10 &nbsp; <b>Średnia POST:</b> ${avg(post)}/10</p><table><tr><th>ID</th><th>Tryb</th><th>Wynik</th><th>Data</th></tr>${r.map(x=>`<tr><td>${x.id}</td><td>${x.tryb}</td><td>${x.wynik}/10</td><td>${new Date(x.data).toLocaleString("pl-PL")}</td></tr>`).join("")}</table>`}
 function exportCSV(){const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");if(!r.length){alert("Brak wyników.");return}const rows=[["ID","Tryb","Wynik","Maks","Data","Wiek","Klasa","Płeć","Internet","Źródła","Edukacja","Sprawdzanie","Wcześniej udostępnił(a) nieprawdziwą informację"]];r.forEach(x=>rows.push([x.id,x.tryb,x.wynik,x.max,x.data,x.meta.wiek,x.meta.klasa,x.meta.plec,x.meta.internet,(x.meta.zrodla||[]).join("|"),x.meta.edukacja,x.meta.sprawdzanie,x.meta.udostepnienie]));const csv="\ufeff"+rows.map(row=>row.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="JURA_INFO_SP_wyniki.csv";a.click()}
