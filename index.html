@@ -45,6 +45,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px
 <section id="quiz" class="card hidden"><div class="small"><span id="mode"></span> • pytanie <span id="num"></span>/10</div>
 <h2 id="question"></h2><div id="answers"></div><button id="next" onclick="nextQ()">Dalej</button></section>
 
+<section id="unlock" class="card hidden"><h2>POST po zakończeniu działania</h2><p id="unlockMsg" class="notice"></p><p class="small">Użyj tego samego kodu uczestnika co przy PRE. Kod odblokowania otrzymasz od prowadzącego dopiero po zakończeniu ćwiczenia, zajęć lub działania projektu.</p><label>Kod odblokowania POST</label><input id="unlockCode" type="password" maxlength="30" placeholder="Kod od prowadzącego"><button onclick="unlockPost()">Odblokuj POST</button><button class="alt" onclick="hideAll();$('home').classList.remove('hidden');$('pid').value='';">Wróć</button></section>
+
 <section id="result" class="card hidden"><h2>Wynik</h2><div class="score" id="score"></div><div id="interp"></div><div id="saveInfo" class="notice"></div>
 <div id="postGate" class="hidden"><h3>POST po zakończeniu działania</h3><p class="small">Test POST jest dostępny dopiero dla tego samego kodu uczestnika, po wykonaniu PRE i zakończeniu działania projektu.</p><button onclick="startPostIfAllowed()">Rozpocznij POST</button></div><button class="alt" onclick="showPanel()">Panel prowadzącego</button></section>
 
@@ -57,6 +59,8 @@ const STORAGE="jura72h_diag_sp_v1";
 let pid="",meta={},mode="",qs=[],i=0,scoreValue=0,answers=[];
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
 let centralLastStatus="";
+// POST odblokowuje wyłącznie prowadzący po zakończeniu działania.
+const POST_UNLOCK_CODE="JURA72H-POST";
 
 async function sendToCentral(record) {
   const payload=JSON.stringify({action:"save",record:record});
@@ -78,7 +82,7 @@ async function sendToCentral(record) {
     return false;
   }
 }
-function $(id){return document.getElementById(id)}function hideAll(){["home","meta","quiz","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
+function $(id){return document.getElementById(id)}function hideAll(){["home","meta","quiz","unlock","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
 function startMeta(){
   pid=$("pid").value.trim();
   if(!pid){alert("Wpisz kod uczestnika.");return;}
@@ -87,9 +91,25 @@ function startMeta(){
   const hasPost=r.some(x=>x.id===pid && x.tryb==="POST");
   if(hasPost){alert("Dla tego kodu wykonano już PRE i POST.");return;}
   if(hasPre){
-    hideAll();$("result").classList.remove("hidden");$("score").textContent="PRE zapisany";$("interp").innerHTML="<p>Ten kod ma już zapisany PRE. Po zakończeniu działania możesz wrócić tutaj i uruchomić POST.</p>";$("saveInfo").textContent="Kod rozpoznany.";$("postGate").classList.remove("hidden");return;
+    hideAll();
+    $("unlock").classList.remove("hidden");
+    $("unlockMsg").textContent="Kod rozpoznany. PRE tego uczestnika jest już zapisany. POST zostanie odblokowany dopiero po zakończeniu działania przez prowadzącego.";
+    $("unlockCode").value="";
+    return;
   }
   hideAll();$("meta").classList.remove("hidden");
+}
+function unlockPost(){
+  const code=$("unlockCode").value.trim();
+  if(!pid){alert("Najpierw wpisz kod uczestnika.");return;}
+  const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+  const hasPre=r.some(x=>x.id===pid && x.tryb==="PRE");
+  const hasPost=r.some(x=>x.id===pid && x.tryb==="POST");
+  if(!hasPre){alert("Dla tego kodu nie znaleziono wcześniejszego PRE.");return;}
+  if(hasPost){alert("Dla tego kodu POST został już wykonany.");return;}
+  if(code!==POST_UNLOCK_CODE){alert("Nieprawidłowy kod odblokowania. Kod wydaje prowadzący dopiero po zakończeniu działania.");return;}
+  mode="POST";qs=POST;i=0;scoreValue=0;answers=[];
+  hideAll();$("quiz").classList.remove("hidden");render();
 }
 function readMeta(){meta={wiek:$("age").value,klasa:$("class").value,plec:$("gender").value,internet:$("net").value,
 zrodla:[...document.querySelectorAll('input[name="source"]:checked')].map(x=>x.value),
@@ -101,16 +121,7 @@ function startTest(m){
   hideAll();$("quiz").classList.remove("hidden");render();
 }
 function startPostIfAllowed(){
-  if(!pid){alert("Najpierw wpisz kod uczestnika.");return;}
-  const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");
-  const hasPre=r.some(x=>x.id===pid && x.tryb==="PRE");
-  const hasPost=r.some(x=>x.id===pid && x.tryb==="POST");
-  if(hasPost){alert("Dla tego kodu POST został już wykonany.");return;}
-  if(hasPre){
-    mode="POST";qs=POST;i=0;scoreValue=0;answers=[];
-    hideAll();$("quiz").classList.remove("hidden");render();return;
-  }
-  alert("POST jest dostępny dopiero po wykonaniu PRE dla tego samego kodu uczestnika.");
+  alert("POST jest zablokowany. Po zakończeniu działania wróć z tym samym kodem uczestnika i uzyskaj kod odblokowania od prowadzącego.");
 }
 function render(){const q=qs[i];$("mode").textContent=mode;$("num").textContent=i+1;$("question").innerHTML=q.q;$("answers").innerHTML=q.a.map((a,n)=>`<label class="opt"><input type="radio" name="ans" value="${n}"><span>${a}</span></label>`).join("")}
 function nextQ(){const ch=document.querySelector('input[name="ans"]:checked');if(!ch){alert("Wybierz odpowiedź.");return}const n=Number(ch.value),q=qs[i];if(n===q.c)scoreValue++;answers.push({q:i+1,obszar:q.area,wybrana:n,poprawna:n===q.c});if(i<qs.length-1){i++;render()}else finish()}
@@ -118,7 +129,7 @@ async function finish(){
   const ok=await saveResult();
   hideAll();$("result").classList.remove("hidden");$("score").textContent=scoreValue+"/10";
   $("interp").innerHTML="<p class='small'>Interpretacja robocza do ewaluacji projektu; wynik nie jest diagnozą psychologiczną.</p>";
-  $("postGate").classList.toggle("hidden",mode!=="PRE" || !ok);
+  $("postGate").classList.add("hidden");
 }
 async function saveResult(){
   const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta:meta,obszary:answers,typSzkoly:"SP"};
@@ -130,7 +141,7 @@ async function saveResult(){
   localStorage.setItem(STORAGE,JSON.stringify(r.concat([record])));
   const ok=await sendToCentral(record);
   if(ok){
-    $("saveInfo").textContent="✓ Wynik zapisany. Kod uczestnika zachowany — POST będzie dostępny dopiero po zakończeniu działania.";
+    $("saveInfo").textContent="✓ Wynik PRE zapisany. POST pozostaje zablokowany do czasu zakończenia działania i odblokowania przez prowadzącego.";
   } else {
     $("saveInfo").textContent="✓ Wynik zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy.";
   }
