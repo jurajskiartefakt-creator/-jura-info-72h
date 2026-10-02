@@ -1,6 +1,6 @@
 <!doctype html><html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#172554"><meta name="jura-info-version" content="SP-CENTRAL-v2-2026-10-02"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="JURA INFO SP">
 <title>JURA INFO 72H – szkoły podstawowe</title><link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -64,6 +64,7 @@ async function sendToCentral(record) {
     await fetch(CENTRAL_ENDPOINT,{
       method:"POST",
       mode:"no-cors",
+      cache:"no-store",
       headers:{"Content-Type":"text/plain;charset=UTF-8"},
       body:JSON.stringify({action:"save",record:record})
     });
@@ -93,7 +94,7 @@ function loginParticipant(){
     hideAll();$("result").classList.remove("hidden");
     $("score").textContent=pre.wynik+"/10";
     $("interp").innerHTML="<p class='small'>To wynik PRE zapisany dla tego kodu.</p>";
-    $("resultNext").innerHTML="<b>POST jest odblokowany dla tego samego kodu.</b><br><br><button onclick="startPostForSameId()">Rozpocznij POST</button>";
+    $("resultNext").innerHTML="<b>POST jest odblokowany dla tego samego kodu.</b><br><br><button onclick='startPostForSameId()'>Rozpocznij POST</button>";
     return;
   }
   pendingLoginId=pid;
@@ -132,10 +133,10 @@ async function saveResult(){
   localStorage.setItem(STORAGE,JSON.stringify(r));
   const ok=await sendToCentral(record);
   const info=$("saveInfo");
-  if(info) info.textContent=ok?"✓ Wynik zapisany na urządzeniu i wysłany do centralnej bazy.":"✓ Wynik zapisany na urządzeniu. Nie udało się teraz wysłać go do centralnej bazy — spróbujemy ponownie później.";
+  if(info) info.textContent=ok?"✓ Wynik zapisany na urządzeniu i przekazany do centralnej bazy. Sprawdzenie potwierdzenia: zakładka „wyniki” w Google Sheets.":"✓ Wynik zapisany na urządzeniu. Nie udało się przekazać go teraz do centralnej bazy — zachowano kopię lokalną.";
 }
 function showPanel(){hideAll();$("panel").classList.remove("hidden");const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");if(!r.length){$("panelBody").innerHTML="<p>Brak wyników.</p>";return}let pre=r.filter(x=>x.tryb==="PRE"),post=r.filter(x=>x.tryb==="POST"),avg=a=>a.length?(a.reduce((s,x)=>s+x.wynik,0)/a.length).toFixed(2):"—";$("panelBody").innerHTML=`<p><b>Zapisy:</b> ${r.length} | <b>PRE:</b> ${pre.length} | <b>POST:</b> ${post.length}</p><p><b>Średnia PRE:</b> ${avg(pre)}/10 &nbsp; <b>Średnia POST:</b> ${avg(post)}/10</p><table><tr><th>ID</th><th>Tryb</th><th>Wynik</th><th>Data</th></tr>${r.map(x=>`<tr><td>${x.id}</td><td>${x.tryb}</td><td>${x.wynik}/10</td><td>${new Date(x.data).toLocaleString("pl-PL")}</td></tr>`).join("")}</table>`}
 function exportCSV(){const r=JSON.parse(localStorage.getItem(STORAGE)||"[]");if(!r.length){alert("Brak wyników.");return}const rows=[["ID","Tryb","Wynik","Maks","Data","Wiek","Klasa","Płeć","Internet","Źródła","Edukacja","Sprawdzanie","Wcześniej udostępnił(a) nieprawdziwą informację"]];r.forEach(x=>rows.push([x.id,x.tryb,x.wynik,x.max,x.data,x.meta.wiek,x.meta.klasa,x.meta.plec,x.meta.internet,(x.meta.zrodla||[]).join("|"),x.meta.edukacja,x.meta.sprawdzanie,x.meta.udostepnienie]));const csv="\ufeff"+rows.map(row=>row.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="JURA_INFO_SP_wyniki.csv";a.click()}
 function clearResults(){if(confirm("Usunąć wszystkie wyniki zapisane na tym urządzeniu?")){localStorage.removeItem(STORAGE);showPanel()}}
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=20261002-2",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{}));
 </script></body></html>
