@@ -82,7 +82,16 @@ async function sendToCentral(record) {
     return false;
   }
 }
-function $(id){return document.getElementById(id)}function hideAll(){["home","meta","quiz","unlock","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
+function $(id){return document.getElementById(id)}
+function hideAll(){["home","meta","quiz","unlock","result","panel"].forEach(x=>$(x).classList.add("hidden"))}
+function resetToStart(){
+  pid=""; meta={}; mode=""; qs=[]; i=0; scoreValue=0; answers=[];
+  hideAll();
+  $("home").classList.remove("hidden");
+  $("pid").value="";
+  if($("unlockCode")) $("unlockCode").value="";
+}
+window.addEventListener("pageshow",function(){resetToStart();});
 function startMeta(){
   pid=$("pid").value.trim();
   if(!pid){alert("Wpisz kod uczestnika.");return;}
@@ -141,9 +150,13 @@ async function saveResult(){
   localStorage.setItem(STORAGE,JSON.stringify(r.concat([record])));
   const ok=await sendToCentral(record);
   if(ok){
-    $("saveInfo").textContent="✓ Wynik PRE zapisany. POST pozostaje zablokowany do czasu zakończenia działania i odblokowania przez prowadzącego.";
+    $("saveInfo").textContent = mode==="PRE"
+      ? "✓ Wynik PRE zapisany. POST pozostaje zablokowany do czasu zakończenia działania i odblokowania przez prowadzącego."
+      : "✓ Wynik POST zapisany.";
   } else {
-    $("saveInfo").textContent="✓ Wynik zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy.";
+    $("saveInfo").textContent = mode==="PRE"
+      ? "✓ Wynik PRE zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy."
+      : "✓ Wynik POST zapisany lokalnie. Nie udało się teraz potwierdzić wysłania do centralnej bazy.";
   }
   return true;
 }
