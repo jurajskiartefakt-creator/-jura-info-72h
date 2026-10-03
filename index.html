@@ -2,7 +2,7 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="MOBILE-POST-FIX-2.6-2026-10-03"><title>JURA INFO 72H – badanie diagnostyczne · v2.6</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="MOBILE-POST-FIX-2.8-2026-10-03"><title>JURA INFO 72H – badanie diagnostyczne · v2.8</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
@@ -32,7 +32,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 2.7 — MOBILE CONNECTION FIX</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 2.8 — SAFARI JSONP FIX</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -56,19 +56,11 @@ async function readPostStatus(login){
   let last=null;
   for(let attempt=1;attempt<=4;attempt++){
     try{
-      const r=await new Promise((resolve,reject)=>{
-        const cb='jura72h_status_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-        const script=document.createElement('script');let done=false;
-        const cleanup=()=>{try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}};
-        const finish=v=>{if(done)return;done=true;cleanup();v&&v.ok?resolve(v):reject(new Error((v&&v.error)||'Nieprawidłowa odpowiedź'))};
-        window[cb]=finish;script.onerror=()=>reject(new Error('Błąd połączenia'));
-        const bust=Date.now()+'-'+Math.random().toString(36).slice(2);
-        script.src=CENTRAL_ENDPOINT+'?action=status&login='+encodeURIComponent(login)+'&callback='+encodeURIComponent(cb)+'&_v=2.6-'+bust;
-        document.body.appendChild(script);
-        setTimeout(()=>{if(!done){done=true;cleanup();reject(new Error('Timeout'))}},6000);
-      });
-      return r;
-    }catch(e){last=e;if(attempt<4)await new Promise(r=>setTimeout(r,500*attempt));}
+      return await jsonpAsync('status',{login:login},7000);
+    }catch(e){
+      last=e;
+      if(attempt<4) await new Promise(r=>setTimeout(r,500*attempt));
+    }
   }
   throw last||new Error('Nie udało się odczytać statusu POST');
 }
@@ -85,7 +77,7 @@ async function preparePOST(){
     alert('POST nie został jeszcze odblokowany przez prowadzącego.');
   }catch(e){
     btn.textContent='POST — po projekcie';btn.disabled=false;
-    alert(e&&e.message==='Timeout'?'Nie udało się połączyć z bazą centralną (timeout). Spróbuj ponownie.':'Nie udało się połączyć z bazą centralną. Spróbuj ponownie.');
+    alert('Nie udało się odczytać statusu POST z bazy centralnej. Spróbuj ponownie.');
   }
 }
 function openMetaForMode(){readMeta();$('schoolBadge').textContent=DATA[school].badge;$('metaModeBadge').textContent=mode;$('startTestBtn').textContent=mode==='PRE'?'Rozpocznij PRE':'Rozpocznij POST';hideAll();$('meta').classList.remove('hidden')}
@@ -95,7 +87,45 @@ function begin(m){if(m==='POST')preparePOST();else preparePRE()}
 function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
-function jsonp(action,params,done){const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const finishResult=r=>{if(finished)return;finished=true;try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}done(r)};window[cb]=finishResult;script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb)];Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));script.src=CENTRAL_ENDPOINT+'?'+q.join('&')+'&v=20261003POSTMANAGER22';document.body.appendChild(script);setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000)}
+function makeJsonpUrl(action,params,cb){
+  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=2.8-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
+  Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));
+  return CENTRAL_ENDPOINT+'?'+q.join('&');
+}
+function jsonp(action,params,done){
+  const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const script=document.createElement('script');
+  let finished=false;
+  const finishResult=r=>{
+    if(finished)return;finished=true;
+    try{delete window[cb]}catch(e){window[cb]=undefined}
+    try{script.remove()}catch(e){}
+    done(r);
+  };
+  window[cb]=finishResult;
+  script.async=true;
+  script.charset='utf-8';
+  script.referrerPolicy='no-referrer-when-downgrade';
+  script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});
+  script.src=makeJsonpUrl(action,params,cb);
+  (document.head||document.documentElement).appendChild(script);
+  setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000);
+}
+function jsonpAsync(action,params,timeout){
+  return new Promise((resolve,reject)=>{
+    const cb='jura72h_async_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    let done=false;
+    const cleanup=()=>{try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}};
+    const finish=r=>{if(done)return;done=true;cleanup();if(r&&r.ok)resolve(r);else reject(new Error((r&&r.error)||'Nieprawidłowa odpowiedź'))};
+    window[cb]=finish;
+    script.async=true;script.charset='utf-8';script.referrerPolicy='no-referrer-when-downgrade';
+    script.onerror=()=>finish({ok:false,error:'Błąd połączenia'});
+    script.src=makeJsonpUrl(action,params,cb);
+    (document.head||document.documentElement).appendChild(script);
+    setTimeout(()=>finish({ok:false,error:'Timeout'}),timeout||8000);
+  });
+}
 async function sendToCentral(record){
   const payload=JSON.stringify({action:"save",record:record});
   // 1) iPhone/Safari: native POST with plain text JSON.
@@ -107,12 +137,12 @@ async function sendToCentral(record){
   }catch(e){}
   // 2) fetch POST fallback.
   try{
-    await fetch(CENTRAL_ENDPOINT+"?_v=2.6-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload});
+    await fetch(CENTRAL_ENDPOINT+"?_v=2.8-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload});
     return true;
   }catch(e){}
   // 3) GET fallback, which Apps Script also accepts.
   try{
-    const u=CENTRAL_ENDPOINT+"?action=save&data="+encodeURIComponent(payload)+"&_v=2.6-"+Date.now();
+    const u=CENTRAL_ENDPOINT+"?action=save&data="+encodeURIComponent(payload)+"&_v=2.8-"+Date.now();
     await fetch(u,{method:"GET",mode:"no-cors",cache:"no-store",keepalive:true});
     return true;
   }catch(e){return false}
@@ -126,7 +156,7 @@ async function finish(){const record={id:pid,tryb:mode,wynik:scoreValue,max:10,d
           const cb="jura72h_savecheck_"+Date.now()+"_"+Math.random().toString(36).slice(2);const sc=document.createElement("script");let done=false;
           const clean=()=>{try{delete window[cb]}catch(e){window[cb]=undefined}try{sc.remove()}catch(e){}};
           window[cb]=r=>{if(done)return;done=true;clean();resolve(r)};sc.onerror=()=>{if(!done){done=true;clean();reject(new Error("Błąd"))}};
-          sc.src=CENTRAL_ENDPOINT+"?action=status&login="+encodeURIComponent(record.id)+"&callback="+encodeURIComponent(cb)+"&_v=2.6-check-"+Date.now()+"-"+Math.random().toString(36).slice(2);document.body.appendChild(sc);
+          sc.src=CENTRAL_ENDPOINT+"?action=status&login="+encodeURIComponent(record.id)+"&callback="+encodeURIComponent(cb)+"&_v=2.8-check-"+Date.now()+"-"+Math.random().toString(36).slice(2);document.body.appendChild(sc);
           setTimeout(()=>{if(!done){done=true;clean();reject(new Error("Timeout"))}},5000);
         });
         confirmed=record.tryb==="POST"?!!st.postDone:!!st.pre;
@@ -141,7 +171,28 @@ function interpret(s){if(s<=3)return'Wynik wskazuje na potrzebę intensywnego ro
 function newTest(){hideAll();$('home').classList.remove('hidden')}
 function goHome(){hideAll();$('home').classList.remove('hidden')}
 function openManagerLogin(){hideAll();$('managerLogin').classList.remove('hidden');$('managerPass').value='';$('managerLoginInfo').classList.add('hidden')}
-function managerLogin(){const u=$('managerUser').value.trim()||'MANAGER',p=$('managerPass').value;if(u!=='MANAGER'||!p){$('managerLoginInfo').className='status warn';$('managerLoginInfo').classList.remove('hidden');$('managerLoginInfo').textContent='Podaj login i hasło.';return}$('managerLoginInfo').className='status';$('managerLoginInfo').classList.remove('hidden');$('managerLoginInfo').textContent='Łączenie z bazą centralną…';jsonp('managerLogin',{user:u,password:p},r=>{if(r&&r.ok&&r.token){managerToken=r.token;sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);$('managerLoginInfo').className='status';$('managerLoginInfo').textContent='Zalogowano.';loadManagerData();return}const err=String((r&&r.error)||'');if(err==='Błąd połączenia'||err==='Timeout'){ $('managerLoginInfo').className='status warn';$('managerLoginInfo').textContent='Nie udało się połączyć z bazą centralną. Sprawdź połączenie i spróbuj ponownie.';return}$('managerLoginInfo').className='status warn';$('managerLoginInfo').textContent=err||'Nieprawidłowy login lub hasło.'})}
+function managerLogin(){
+  const u=$('managerUser').value.trim()||'MANAGER';
+  const p=$('managerPass').value;
+  if(u!=='MANAGER'||!p){
+    $('managerLoginInfo').className='status warn';$('managerLoginInfo').classList.remove('hidden');
+    $('managerLoginInfo').textContent='Podaj login i hasło.';return;
+  }
+  $('managerLoginInfo').className='status';$('managerLoginInfo').classList.remove('hidden');
+  $('managerLoginInfo').textContent='Łączenie z bazą centralną…';
+  jsonpAsync('managerLogin',{user:u,password:p},10000).then(r=>{
+    if(r&&r.ok&&r.token){
+      managerToken=r.token;sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
+      $('managerLoginInfo').textContent='Zalogowano.';loadManagerData();return;
+    }
+    $('managerLoginInfo').className='status warn';
+    $('managerLoginInfo').textContent=String((r&&r.error)||'Nieprawidłowy login lub hasło.');
+  }).catch(e=>{
+    $('managerLoginInfo').className='status warn';
+    const msg=String(e&&e.message||'');
+    $('managerLoginInfo').textContent=(msg==='Błąd połączenia'||msg==='Timeout')?'Nie udało się połączyć z bazą centralną. Spróbuj ponownie.':msg;
+  });
+}
 function loadManagerData(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
 function parseAreas(value){
   if(!value) return [];
