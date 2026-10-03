@@ -31,7 +31,12 @@
 <button onclick="refreshManager()">Odśwież wyniki</button><button class="ghost" onclick="managerLogout()">Wyloguj</button>
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
-<div class="footer">JURA INFO 72H · wersja centralna 2.1 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ</div>
+<div class="footer">
+  <b>JURA INFO 72H</b> · wersja centralna 2.1 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
+  Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
+  <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
+</div>
 </main>
 <script>
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
@@ -108,13 +113,13 @@ function showFullResults(login){
   const pre=rows.find(r=>r.TRYB==='PRE'),post=rows.find(r=>r.TRYB==='POST'),pv=pre?Number(pre.WYNIK):null,qv=post?Number(post.WYNIK):null,delta=(pv!==null&&qv!==null)?qv-pv:null;
   $('fullLogin').textContent=login;
   $('fullSchool').textContent=(post||pre||{}).TYP_SZKOŁY||'';
-  $('fullSummary').innerHTML='<p><b>PRE:</b> '+(pre?pre.WYNIK+'/'+(pre.MAKS||10):'brak')+' · <b>POST:</b> '+(post?post.WYNIK+'/'+(post.MAKS||10):'brak')+' · <b>Zmiana:</b> '+(delta===null?'—':(delta>0?'+'+delta:String(delta)))+'</p><p class="small">Obszary są prezentowane jako liczba poprawnych odpowiedzi / liczba pytań.</p>';
+  $('fullSummary').innerHTML='<p><b>PRE:</b> '+(pre?pre.WYNIK+'/'+(pre.MAKS||10):'brak')+' · <b>POST:</b> '+(post?post.WYNIK+'/'+(post.MAKS||10):'brak')+' · <b>Zmiana:</b> '+(delta===null?'—':(delta>0?'+'+delta:String(delta)))+'</p>'+(pre?'<p><b>Obszary PRE:</b> '+escapeHtml(areaSummary(pre)||'brak zapisanych danych')+'</p>':'')+(post?'<p><b>Obszary POST:</b> '+escapeHtml(areaSummary(post)||'brak zapisanych danych')+'</p>':'')+'<p class="small">Obszary są prezentowane jako liczba poprawnych odpowiedzi / liczba pytań.</p>';
   $('fullDetails').innerHTML=rows.sort((a,b)=>String(a.TRYB).localeCompare(String(b.TRYB))).map(r=>{
     const m=[];
     if(r.KLASA)m.push('Klasa: '+escapeHtml(r.KLASA));
     if(r.PŁEĆ)m.push('Płeć: '+escapeHtml(r.PŁEĆ));
     if(r.WIEK)m.push('Wiek: '+escapeHtml(r.WIEK));
-    return '<div class="card" style="box-shadow:none;border:1px solid #e5e7eb;margin:12px 0"><h3>'+escapeHtml(r.TRYB)+' · '+escapeHtml(String(r.WYNIK||''))+'/'+escapeHtml(String(r.MAKS||10))+'</h3><p class="small">'+m.join(' · ')+'</p><p><b>Obszary:</b> '+escapeHtml(areaSummary(r))+'</p></div>';
+    return '<div class="card" style="box-shadow:none;border:1px solid #e5e7eb;margin:12px 0"><h3>'+escapeHtml(r.TRYB)+' · '+escapeHtml(String(r.WYNIK||''))+'/'+escapeHtml(String(r.MAKS||10))+'</h3><p class="small">'+m.join(' · ')+'</p><p><b>Obszary:</b> '+escapeHtml(areaSummary(r)||'brak zapisanych danych')+'</p></div>';
   }).join('');
   hideAll();$('fullResults').classList.remove('hidden');
 }
