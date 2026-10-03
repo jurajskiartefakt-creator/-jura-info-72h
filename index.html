@@ -96,7 +96,7 @@ function refreshManager(){
     $('managerRows').innerHTML=groups.map(g=>{
       const pv=g.pre?Number(g.pre.WYNIK):null, qv=g.post?Number(g.post.WYNIK):null, delta=(pv!==null&&qv!==null)?qv-pv:null;
       const ds=delta===null?'—':(delta>0?'+'+delta:String(delta));
-      return '<tr><td><b>'+escapeHtml(g.id)+'</b></td><td>'+escapeHtml(g.school)+'</td><td>'+(g.pre?escapeHtml(String(g.pre.WYNIK))+'/'+escapeHtml(String(g.pre.MAKS||10)):'—')+'</td><td>'+(g.post?escapeHtml(String(g.post.WYNIK))+'/'+escapeHtml(String(g.post.MAKS||10)):'—')+'</td><td><b>'+escapeHtml(ds)+'</b></td><td>'+escapeHtml(g.klass)+'</td><td><button style="margin:0;padding:8px 10px;font-size:12px" onclick="showFullResults('+JSON.stringify(g.id).replace(/</g,'\\u003c')+')">Pełne wyniki</button></td></tr>';
+      return '<tr><td><b>'+escapeHtml(g.id)+'</b></td><td>'+escapeHtml(g.school)+'</td><td>'+(g.pre?escapeHtml(String(g.pre.WYNIK))+'/'+escapeHtml(String(g.pre.MAKS||10)):'—')+'</td><td>'+(g.post?escapeHtml(String(g.post.WYNIK))+'/'+escapeHtml(String(g.post.MAKS||10)):'—')+'</td><td><b>'+escapeHtml(ds)+'</b></td><td>'+escapeHtml(g.klass)+'</td><td><button style="margin:0;padding:8px 10px;font-size:12px" data-login="'+escapeHtml(g.id)+'" onclick="showFullResults(this.dataset.login)">Pełne wyniki</button></td></tr>';
     }).join('');
     window.juraManagerRows=rows;
   });
