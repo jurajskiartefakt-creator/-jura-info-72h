@@ -36,24 +36,47 @@ function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
 async function sendToCentral(record){
   return await new Promise(resolve=>{
-    const cb="jura72h_cb_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-    const script=document.createElement("script");
-    let done=false;
-    const finish=ok=>{
-      if(done)return;
-      done=true;
-      try{delete window[cb]}catch(e){window[cb]=undefined}
-      script.remove();
-      resolve(ok);
-    };
-    window[cb]=function(result){
-      finish(!!(result && result.ok && result.zapisano));
-    };
-    script.onerror=()=>finish(false);
-    script.src=CENTRAL_ENDPOINT+"?action=save&callback="+encodeURIComponent(cb)+"&data="+encodeURIComponent(JSON.stringify({action:"save",record:record}))+
-      "&v=20261002JSONPFINAL";
-    document.body.appendChild(script);
-    setTimeout(()=>finish(false),8000);
+    const id=String(record && record.id || '').trim();
+    if(!id){ resolve(false); return; }
+
+    const data=encodeURIComponent(JSON.stringify({action:"save",record:record}));
+    const saveUrl=CENTRAL_ENDPOINT+"?action=save&data="+data+"&v=20261003IFRAME";
+
+    const iframe=document.createElement("iframe");
+    iframe.style.display="none";
+    iframe.setAttribute("aria-hidden","true");
+    iframe.src=saveUrl;
+    document.body.appendChild(iframe);
+
+    const cleanup=()=>{try{iframe.remove()}catch(e){}};
+
+    // Daj Apps Script chwilę na wykonanie zapisu, a następnie
+    // odczytaj centralną bazę przez JSONP i sprawdź konkretny ID.
+    setTimeout(()=>{
+      const cb="jura72h_read_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+      const script=document.createElement("script");
+      let done=false;
+
+      const finishRead=ok=>{
+        if(done)return;
+        done=true;
+        try{delete window[cb]}catch(e){window[cb]=undefined}
+        try{script.remove()}catch(e){}
+        cleanup();
+        resolve(!!ok);
+      };
+
+      window[cb]=function(result){
+        const rows=result && Array.isArray(result.wyniki) ? result.wyniki : [];
+        const found=rows.some(r=>String(r.ID || '').trim()===id);
+        finishRead(found);
+      };
+
+      script.onerror=()=>finishRead(false);
+      script.src=CENTRAL_ENDPOINT+"?callback="+encodeURIComponent(cb)+"&v=20261003VERIFY";
+      document.body.appendChild(script);
+      setTimeout(()=>finishRead(false),8000);
+    },1500);
   });
 }
 async function finish(){const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta,obszary:answers,typSzkoly:school};let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);$('saveInfo').className='status';$('saveInfo').textContent='Zapisywanie wyniku…';const ok=await sendToCentral(record);$('saveInfo').textContent=ok?'✓ Wynik zapisany na urządzeniu i potwierdzony w centralnej bazie.':'✓ Wynik zapisany na urządzeniu. Nie udało się teraz wysłać go do bazy centralnej — lokalna kopia pozostała zachowana.';if(!ok)$('saveInfo').className='status warn';}
