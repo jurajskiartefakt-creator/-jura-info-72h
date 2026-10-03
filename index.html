@@ -32,7 +32,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · wersja centralna 2.2 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · wersja centralna 2.1 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -60,18 +60,64 @@ function begin(m){if(m==='POST')preparePOST();else preparePRE()}
 function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
-function jsonp(action,params,done){const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const finishResult=r=>{if(finished)return;finished=true;try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}done(r)};window[cb]=finishResult;script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb)];Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));script.src=CENTRAL_ENDPOINT+'?'+q.join('&')+'&v=20261003POSTMANAGER22';document.body.appendChild(script);setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000)}
+function jsonp(action,params,done){const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const finishResult=r=>{if(finished)return;finished=true;try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}done(r)};window[cb]=finishResult;script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb)];Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));script.src=CENTRAL_ENDPOINT+'?'+q.join('&')+'&v=20261003SAVEVERIFY1';document.body.appendChild(script);setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000)}
 async function sendToCentral(record){
+  // Zapis przez JSONP, a nie fetch(no-cors).
+  // Dzięki temu otrzymujemy rzeczywistą odpowiedź Apps Script.
   try{
-    const body='data='+encodeURIComponent(JSON.stringify({action:'save',record:record}));
-    await fetch(CENTRAL_ENDPOINT,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
-      body:body,
-      keepalive:true
+    const result = await new Promise((resolve)=>{
+      const cb='jura72h_save_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const script=document.createElement('script');
+      let done=false;
+      const finish=(value)=>{
+        if(done)return;
+        done=true;
+        try{delete window[cb]}catch(e){window[cb]=undefined}
+        try{script.remove()}catch(e){}
+        clearTimeout(timer);
+        resolve(value);
+      };
+      window[cb]=r=>finish(r);
+      script.onerror=()=>finish({ok:false,error:'Błąd połączenia z bazą centralną'});
+      const data=JSON.stringify({action:'save',record:record});
+      script.src=CENTRAL_ENDPOINT
+        +'?action=save'
+        +'&data='+encodeURIComponent(data)
+        +'&callback='+encodeURIComponent(cb)
+        +'&v=20261003-SAVEVERIFY1';
+      document.body.appendChild(script);
+      const timer=setTimeout(()=>finish({ok:false,error:'Timeout zapisu'}),10000);
     });
-    return true;
+
+    if(!(result&&result.ok)) return false;
+
+    // Drugie sprawdzenie: czy rekord rzeczywiście jest już widoczny
+    // w centralnej bazie dla tego loginu.
+    const status=await new Promise((resolve)=>{
+      const cb='jura72h_status_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const script=document.createElement('script');
+      let done=false;
+      const finish=(value)=>{
+        if(done)return;
+        done=true;
+        try{delete window[cb]}catch(e){window[cb]=undefined}
+        try{script.remove()}catch(e){}
+        clearTimeout(timer);
+        resolve(value);
+      };
+      window[cb]=r=>finish(r);
+      script.onerror=()=>finish({ok:false});
+      script.src=CENTRAL_ENDPOINT
+        +'?action=status'
+        +'&login='+encodeURIComponent(record.id)
+        +'&callback='+encodeURIComponent(cb)
+        +'&v=20261003-STATUSVERIFY1';
+      document.body.appendChild(script);
+      const timer=setTimeout(()=>finish({ok:false}),10000);
+    });
+
+    return record.tryb==='POST' ? !!(status&&status.ok&&status.postDone)
+                                : !!(status&&status.ok&&status.pre);
   }catch(e){
     return false;
   }
@@ -160,16 +206,5 @@ function unlockPost(){const login=$('unlockLogin').value.trim();if(!login){alert
 function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);goHome()}
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 (function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||''})();
-if("serviceWorker" in navigator){
-  window.addEventListener("load", async ()=>{
-    try{
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r=>r.unregister()));
-    }catch(e){}
-    try{
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k=>caches.delete(k)));
-    }catch(e){}
-  });
-}
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script></body></html>
