@@ -32,14 +32,14 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · wersja centralna 2.3 — MOBILE SAVE FIX · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · wersja centralna 2.4 — MOBILE CENTRAL SAVE · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
 </div>
 </main>
 <script>
-const APP_VERSION="2.3-MOBILE-SAVE-FIX";
+const APP_VERSION="2.4-MOBILE-CENTRAL-SAVE";
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
 const DATA={
  SP:{name:'Szkoła podstawowa',badge:'SP · klasy 4–8',classes:['4','5','6','7','8'],pre:[{"q": "Na klasowej grupie ktoś pisze: „Jutro na pewno nie ma lekcji”, ale nie podaje źródła. Co robisz najpierw?", "a": ["Od razu przekazuję to rodzicom.", "Sprawdzam informację w oficjalnym źródle szkoły.", "Zakładam, że ktoś z klasy wie lepiej.", "Udostępniam wiadomość innym klasom."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Widzisz film, który ma pokazywać niezwykłe wydarzenie. Film jest bardzo emocjonalny. Co warto zrobić?", "a": ["Udostępnić, zanim zniknie.", "Sprawdzić, kto go opublikował i czy są inne źródła.", "Uznać go za prawdziwy, bo wygląda realistycznie.", "Ocenić prawdziwość tylko po komentarzach."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Post ma dużo polubień i komentarzy. Czy to oznacza, że informacja jest prawdziwa?", "a": ["Tak, dużo osób ją widziało.", "Nie. Popularność nie jest dowodem prawdziwości.", "Tak, jeśli komentarze są zgodne.", "Tak, jeśli post jest ładnie przygotowany."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz wiadomość: „Jeśli tego nie wyślesz 10 osobom, stanie się coś złego”. Co robisz?", "a": ["Wysyłam, żeby nic się nie stało.", "Nie przekazuję jej i sprawdzam, czy to prawdziwa informacja.", "Wysyłam tylko najlepszym znajomym.", "Robię zdjęcie i publikuję je na swoim profilu."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Kolega wysłał Ci niesprawdzoną wiadomość o rzekomym zagrożeniu. Co jest odpowiedzialne?", "a": ["Przekazać ją dalej na wszelki wypadek.", "Powiedzieć, że informacja nie jest jeszcze sprawdzona i nie rozpowszechniać jej.", "Dodać własny komentarz, żeby była ciekawsza.", "Wysłać ją wszystkim dorosłym, których znam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "W wiadomości widzisz zdjęcie z podpisem „dzisiejsze”. Nie ma daty ani miejsca. Co może być problemem?", "a": ["Nic, zdjęcie jest dowodem.", "Zdjęcie może pochodzić z innego czasu lub miejsca.", "Zdjęcia zawsze są prawdziwe.", "Brak daty oznacza, że wiadomość jest pilna."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Dwa wiarygodnie wyglądające posty podają sprzeczne informacje. Co robisz?", "a": ["Wybieram ten, który bardziej mi się podoba.", "Szukam źródła pierwotnego i dodatkowego potwierdzenia.", "Wybieram ten z większą liczbą lajków.", "Udostępniam oba bez komentarza."], "c": 1, "area": "OCEŃ"}, {"q": "Ktoś wykorzystał nazwę szkoły i jej logo, aby wysłać sensacyjną wiadomość. Co powinno wzbudzić Twoją uwagę?", "a": ["Logo oznacza, że wiadomość na pewno jest oficjalna.", "Sama grafika nie potwierdza źródła — trzeba sprawdzić oficjalny kanał szkoły.", "Im bardziej oficjalnie wygląda, tym bardziej jest prawdziwa.", "Nie trzeba nic sprawdzać."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Kiedy informacja dotyczy zdrowia lub bezpieczeństwa, co jest szczególnie ważne?", "a": ["Żeby była krótka i straszna.", "Żeby pochodziła ze sprawdzonego źródła i była potwierdzona.", "Żeby miała dużo udostępnień.", "Żeby wysłał ją ktoś znajomy."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Przed udostępnieniem informacji o zagrożeniu najlepiej:", "a": ["Sprawdzić źródło, datę, kontekst i potwierdzenie w innym wiarygodnym miejscu.", "Udostępnić ją jak najszybciej.", "Zmienić nagłówek na bardziej ostrzegawczy.", "Poprosić kolegę, żeby zdecydował za mnie."], "c": 0, "area": "PRZEKAŻ"}],post:[{"q": "Na czacie pojawia się informacja, że lekcje zostaną skrócone. Nikt nie podaje źródła. Co robisz?", "a": ["Sprawdzam oficjalną informację szkoły, zanim w nią uwierzę lub ją przekażę.", "Wysyłam ją wszystkim.", "Zakładam, że skoro ktoś napisał, to wie.", "Czekam na więcej emotikonów."], "c": 0, "area": "SPRAWDŹ"}, {"q": "Widzisz bardzo realistyczne zdjęcie przedstawiające rzekome wydarzenie. Co może pomóc w ocenie?", "a": ["Tylko to, czy zdjęcie wygląda prawdziwie.", "Źródło, data, miejsce, kontekst i niezależne potwierdzenie.", "Liczba komentarzy.", "To, czy zdjęcie jest kolorowe."], "c": 1, "area": "OCEŃ"}, {"q": "Kolega mówi: „Wszyscy tak piszą, więc to prawda”. Jak odpowiadasz?", "a": ["Ma rację, skoro wszyscy tak piszą.", "Popularność informacji nie jest dowodem jej prawdziwości.", "Tak, jeśli post ma dużo reakcji.", "Prawda zależy od liczby komentarzy."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz pilne ostrzeżenie bez autora i bez linku do źródła. Co robisz?", "a": ["Natychmiast je udostępniam.", "Zatrzymuję się i szukam potwierdzenia w wiarygodnym źródle.", "Dodaję własne ostrzeżenie.", "Wysyłam je tylko jednej osobie."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Informacja o bezpieczeństwie może wywoływać silny strach. Co jest rozsądne?", "a": ["Udostępnić ją natychmiast, żeby nikt nie był zaskoczony.", "Najpierw sprawdzić informację i dopiero zdecydować, co przekazać.", "Uznać, że im bardziej straszna, tym bardziej prawdziwa.", "Oceniać ją tylko po emocjach."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Znajdujesz tę samą informację na dwóch stronach, ale obie kopiują ten sam nieznany post. Co robisz?", "a": ["Uznaję, że są dwa niezależne potwierdzenia.", "Szukam źródła pierwotnego i niezależnego potwierdzenia.", "Udostępniam obie strony.", "Wybieram tę z lepszą grafiką."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Ktoś używa zdjęcia szkoły i podpisu dyrektora, ale wiadomość nie jest na stronie szkoły. Co robisz?", "a": ["Uznaję ją za oficjalną.", "Sprawdzam oficjalny kanał szkoły lub pytam szkołę inną wiarygodną drogą.", "Przesyłam ją dalej.", "Zakładam, że podpis jest wystarczającym dowodem."], "c": 1, "area": "OCEŃ"}, {"q": "Przyjaciel prosi Cię o szybkie przesłanie niepotwierdzonej informacji. Co robisz?", "a": ["Przesyłam, bo to przyjaciel.", "Mówię, że najpierw chcę ją sprawdzić.", "Przesyłam tylko do jednej grupy.", "Dodaję „chyba prawda” i wysyłam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "Gdy nie masz pewności, czy informacja jest prawdziwa, najlepszym rozwiązaniem jest:", "a": ["Przedstawić ją jako pewnik.", "Powstrzymać się od rozpowszechniania i sprawdzić źródła.", "Wybrać wersję, która pasuje do mojej opinii.", "Zapytać losową osobę w internecie."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Który zestaw najlepiej pomaga ocenić informację?", "a": ["Nagłówek + liczba lajków.", "Źródło + data + autor + kontekst + niezależne potwierdzenie.", "Kolor grafiki + liczba komentarzy.", "To, czy informacja jest zgodna z opinią znajomych."], "c": 1, "area": "OCEŃ"}]},
@@ -62,58 +62,53 @@ function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
 function jsonp(action,params,done){const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const finishResult=r=>{if(finished)return;finished=true;try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}done(r)};window[cb]=finishResult;script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb)];Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));script.src=CENTRAL_ENDPOINT+'?'+q.join('&')+'&v=20261003SAVEVERIFY1';document.body.appendChild(script);setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000)}
-async function sendFallback(record){
-  // Mobilny zapis: Apps Script ma doPost(), który oczekuje czystego JSON.
-  // Poprzednia wersja wysyłała przez sendBeacon jako x-www-form-urlencoded,
-  // a doPost() próbował parsować body jako JSON — dlatego telefon mógł zostać
-  // tylko z kopią lokalną.
-  const body=JSON.stringify({action:'save',record:record});
-  let queued=false;
-
+async function sendFormPost(record){
+  // Najbardziej kompatybilny POST dla iPhone/Safari + Google Apps Script.
+  // Dane są wysyłane jako formularz, więc Apps Script otrzymuje je w e.parameter.payload.
+  const payload=JSON.stringify({action:'save',record:record});
   try{
+    const body=new URLSearchParams();
+    body.set('payload',payload);
     if(navigator.sendBeacon){
-      const blob=new Blob([body],{type:'text/plain;charset=UTF-8'});
-      queued=navigator.sendBeacon(CENTRAL_ENDPOINT,blob);
+      const queued=navigator.sendBeacon(CENTRAL_ENDPOINT,body);
+      if(queued)return true;
     }
   }catch(e){}
-
-  if(!queued){
-    try{
-      await fetch(CENTRAL_ENDPOINT+'?v=20261003-MOBILE-POST-23',{
-        method:'POST',
-        mode:'no-cors',
-        cache:'no-store',
-        keepalive:true,
-        headers:{'Content-Type':'text/plain;charset=UTF-8'},
-        body:body
-      });
-      queued=true;
-    }catch(e){}
-  }
-
-  return queued;
+  try{
+    await fetch(CENTRAL_ENDPOINT+'?v=20261003-MOBILE-FORM-24',{
+      method:'POST',
+      mode:'no-cors',
+      cache:'no-store',
+      keepalive:true,
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body:body.toString()
+    });
+    return true;
+  }catch(e){return false}
 }
 
 async function saveViaJsonp(record){
   try{
     const result=await new Promise((resolve)=>{
-      const cb='jura72h_save23_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const cb='jura72h_save24_'+Date.now()+'_'+Math.random().toString(36).slice(2);
       const script=document.createElement('script');
       let done=false;
+      let timer=null;
       const finishResult=(value)=>{
-        if(done)return;done=true;
+        if(done)return; done=true;
         try{delete window[cb]}catch(e){window[cb]=undefined}
         try{script.remove()}catch(e){}
-        clearTimeout(timer);resolve(value);
+        if(timer)clearTimeout(timer);
+        resolve(value);
       };
       window[cb]=r=>finishResult(r);
       script.onerror=()=>finishResult({ok:false});
       const data=JSON.stringify({action:'save',record:record});
-      script.src=CENTRAL_ENDPOINT+'?action=save&data='+encodeURIComponent(data)+'&callback='+encodeURIComponent(cb)+'&v=20261003-MOBILE-JSONP-23';
+      script.src=CENTRAL_ENDPOINT+'?action=save&data='+encodeURIComponent(data)+'&callback='+encodeURIComponent(cb)+'&v=20261003-MOBILE-JSONP-24';
       document.body.appendChild(script);
-      const timer=setTimeout(()=>finishResult({ok:false}),8000);
+      timer=setTimeout(()=>finishResult({ok:false,error:'timeout'}),10000);
     });
-    return !!(result&&result.ok);
+    return !!(result&&result.ok&&result.zapisano);
   }catch(e){return false}
 }
 
@@ -163,22 +158,30 @@ async function waitForCentral(record, attempts=8, delayMs=1200){
 
 async function sendToCentral(record){
   try{
-    // 1. Na telefonie wysyłamy POST JSON przez Beacon. To jest zgodne z doPost() Apps Script.
-    const queued=await sendFallback(record);
-    if(queued && await waitForCentral(record,8,1200)){
-      removePending(record);return true;
+    // 1. Najpierw JSONP GET — ten kanał jest już sprawdzony na desktopie
+    // i nie wymaga CORS ani odpowiedzi z POST.
+    if(await saveViaJsonp(record) && await waitForCentral(record,6,1000)){
+      removePending(record);
+      return true;
     }
 
-    // 2. Jeśli POST nie został potwierdzony, próbujemy jeszcze raz przez JSONP.
-    if(await saveViaJsonp(record) && await waitForCentral(record,5,1000)){
-      removePending(record);return true;
+    // 2. Fallback dla Safari/iPhone: POST formularzowy przez Beacon/fetch.
+    if(await sendFormPost(record) && await waitForCentral(record,8,1000)){
+      removePending(record);
+      return true;
     }
 
-    // 3. Brak potwierdzenia = tylko lokalna kopia + kolejka do ponowienia.
+    // 3. Ostatecznie ponawiamy JSONP po wysłaniu POST.
+    if(await saveViaJsonp(record) && await waitForCentral(record,4,1000)){
+      removePending(record);
+      return true;
+    }
+
     queuePending(record);
     return false;
   }catch(e){
-    queuePending(record);return false;
+    queuePending(record);
+    return false;
   }
 }
 
@@ -187,11 +190,11 @@ async function flushPending(){
   if(!rows.length)return;
   for(const record of rows.slice(0,10)){
     try{
-      if(await sendFallback(record) && await waitForCentral(record,5,1000)){
-        removePending(record);continue;
-      }
       if(await saveViaJsonp(record) && await waitForCentral(record,4,1000)){
-        removePending(record);continue;
+        removePending(record); continue;
+      }
+      if(await sendFormPost(record) && await waitForCentral(record,5,1000)){
+        removePending(record); continue;
       }
     }catch(e){}
   }
@@ -281,10 +284,6 @@ function unlockPost(){const login=$('unlockLogin').value.trim();if(!login){alert
 function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);goHome()}
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 (function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||''})();
-if("serviceWorker" in navigator){
-  // Wersja 2.3: nie używamy starego service workera, który mógł podawać poprzedni HTML.
-  navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
-}
 window.addEventListener('load',()=>{setTimeout(flushPending,1200)});
 window.addEventListener('pageshow',()=>{setTimeout(flushPending,800)});
 </script></body></html>
