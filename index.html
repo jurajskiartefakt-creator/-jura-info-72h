@@ -1,781 +1,146 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>JURA INFO 72H</title>
-
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
+<title>JURA INFO 72H – badanie diagnostyczne</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f3f6fb;
-  color:#17213d;
-}
-.wrap{
-  max-width:1100px;
-  margin:auto;
-  padding:28px 18px 50px;
-}
-h1{font-size:42px;margin:0 0 8px}
-h2{font-size:28px}
-.subtitle{
-  font-size:20px;
-  color:#68738a;
-  line-height:1.45;
-  margin-bottom:28px;
-}
-.card{
-  background:#fff;
-  border-radius:24px;
-  padding:28px;
-  margin-bottom:22px;
-  box-shadow:0 8px 30px rgba(0,0,0,.07);
-}
-.badge{
-  display:inline-block;
-  background:#eaf0ff;
-  color:#203b8f;
-  border-radius:20px;
-  padding:8px 14px;
-  font-weight:bold;
-  margin-right:6px;
-}
-button{
-  border:0;
-  border-radius:14px;
-  padding:16px 22px;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  background:#173caa;
-  color:white;
-}
-button.secondary{
-  background:#e9eef8;
-  color:#173caa;
-}
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-input,select{
-  width:100%;
-  padding:15px;
-  border:1px solid #ccd4e2;
-  border-radius:12px;
-  font-size:17px;
-  margin-top:7px;
-}
-label{
-  display:block;
-  font-weight:bold;
-  margin:18px 0;
-}
-.question{
-  padding:18px;
-  background:#f7f9fc;
-  border-radius:16px;
-  margin:15px 0;
-}
-.answers label{
-  font-weight:normal;
-  margin:10px 0;
-}
-.result{
-  text-align:center;
-  font-size:58px;
-  font-weight:bold;
-  margin:25px 0;
-}
-.ok{
-  background:#edf9f0;
-  color:#27743b;
-  padding:15px;
-  border-radius:14px;
-}
-.warn{
-  background:#fff6e9;
-  color:#9a4d21;
-  padding:15px;
-  border-radius:14px;
-}
-.small{
-  color:#68738a;
-  font-size:14px;
-  line-height:1.5;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:18px;
-}
-th,td{
-  padding:12px 8px;
-  border-bottom:1px solid #e3e7ef;
-  text-align:left;
-}
-footer{
-  margin-top:35px;
-  color:#68738a;
-  line-height:1.5;
-}
-.hidden{display:none}
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
-@media(max-width:700px){
-  h1{font-size:32px}
-  .row{grid-template-columns:1fr}
-  .card{padding:20px}
-}
-</style>
-</head>
-
-<body>
-
-<div class="wrap">
-
-<h1>JURA INFO 72H</h1>
-
-<div class="subtitle">
-Badanie kompetencji informacyjnych młodzieży w sytuacjach wymagających szybkiej i odpowiedzialnej decyzji.
-</div>
-
-<!-- WYBÓR TYPU SZKOŁY -->
-<section id="schoolScreen" class="card">
-
-<h2>Wybierz typ szkoły</h2>
-
-<p class="small">
-Wybór określa zestaw sytuacji badawczych. Dane trafiają do wspólnego standardu badania.
-</p>
-
-<div class="row">
-
-<button onclick="startSchool('SP')">
-Szkoła podstawowa
-</button>
-
-<button onclick="startSchool('PP')">
-Szkoła ponadpodstawowa
-</button>
-
-</div>
-
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
+</style></head><body><main class="wrap">
+<section class="hero"><span class="brand">JURA INFO 72H</span><h1>Odporność informacyjna</h1><div class="lead">Badanie kompetencji informacyjnych młodzieży w sytuacjach wymagających szybkiej i odpowiedzialnej decyzji.</div></section>
+<section id="home" class="card"><h2>Wybierz typ szkoły</h2><p class="small">Wybór określa zestaw sytuacji badawczych. Dane trafiają do wspólnego standardu badania.</p><div class="grid"><button class="choice" onclick="chooseSchool('SP')"><strong>Szkoła podstawowa</strong><span>Klasy 4–8 · scenariusze dostosowane do wieku</span></button><button class="choice" onclick="chooseSchool('PP')"><strong>Szkoła ponadpodstawowa</strong><span>Liceum · technikum · szkoła branżowa</span></button></div><button class="ghost" onclick="openManagerLogin()">Panel MANAGERA</button></section>
+<section id="modeSelect" class="card hidden"><div><span id="schoolBadgeMode" class="badge"></span><span class="badge">anonimowe badanie</span></div><h2>Wybierz etap badania</h2><p class="small">Wpisz login uczestnika. PRE wykonujesz przed projektem. POST będzie dostępny dopiero po odblokowaniu przez prowadzącego.</p><label for="pidMode">Login uczestnika</label><input id="pidMode" type="text" maxlength="30" placeholder="np. SP8-01" autocomplete="off"><div class="grid"><button onclick="preparePRE()">PRE — przed projektem</button><button id="postModeBtn" class="alt" onclick="preparePOST()">POST — po projekcie</button></div><div id="postHintMode" class="small" style="margin-top:8px">POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.</div><button class="ghost" onclick="goHome()">Wróć</button></section>
+<section id="meta" class="card hidden"><div><span id="schoolBadge" class="badge"></span><span id="metaModeBadge" class="badge"></span></div><h2>Dane badania</h2><p class="small">Dane poniżej są częścią badania i pojawiają się dopiero po wyborze etapu. Nie wpisuj imienia ani nazwiska.</p><div class="grid"><div><label for="age">Wiek</label><input id="age" type="number" min="9" max="25"></div><div><label for="class">Klasa</label><select id="class"></select></div></div><label for="gender">Płeć</label><select id="gender"><option value="">Wybierz lub pomiń</option><option>dziewczyna</option><option>chłopak</option><option>inna / nie chcę określać</option></select>
+<label for="net">Jak często korzystasz z internetu?</label><select id="net"><option value="">Wybierz</option><option>rzadziej niż codziennie</option><option>codziennie do 2 godzin</option><option>codziennie 2–4 godziny</option><option>codziennie ponad 4 godziny</option></select>
+<label>Z jakich źródeł najczęściej czerpiesz informacje? <span class="small">(możesz wybrać kilka)</span></label><div id="sources"></div>
+<label for="education">Czy miałeś/aś wcześniej zajęcia o fake newsach, dezinformacji, bezpieczeństwie informacji lub AI?</label><select id="education"><option value="">Wybierz</option><option>tak</option><option>nie</option><option>nie pamiętam</option></select>
+<label for="checking">Co zwykle robisz, gdy informacja wydaje się ważna lub szokująca?</label><select id="checking"><option value="">Wybierz</option><option>sprawdzam w kilku źródłach</option><option>sprawdzam w jednym źródle</option><option>pytam kogoś</option><option>zwykle przekazuję dalej</option><option>zwykle nic nie robię</option></select>
+<label for="mistake">Czy zdarzyło Ci się udostępnić informację, która później okazała się nieprawdziwa?</label><select id="mistake"><option value="">Wybierz</option><option>tak</option><option>nie</option><option>nie wiem</option></select>
+<button id="startTestBtn" onclick="startPreparedTest()">Rozpocznij badanie</button><button class="ghost" onclick="backToModeSelect()">Wróć</button></section>
+<section id="quiz" class="card hidden"><div><span class="badge" id="schoolQ"></span><span class="badge" id="mode"></span> <span class="qnum">Pytanie <span id="num"></span>/10</span></div><div class="question" id="question"></div><div id="answers"></div><button id="next" onclick="nextQuestion()">Dalej</button></section>
+<section id="result" class="card hidden"><span class="badge" id="resultSchool"></span><span class="badge" id="resultMode"></span><h2>Wynik badania</h2><div class="score"><span id="score"></span>/10</div><p id="interpret" class="lead"></p><div id="saveInfo" class="status">Zapisywanie wyniku…</div><button onclick="newTest()">Nowe badanie</button></section>
+<section id="managerLogin" class="card hidden"><h2>Panel MANAGERA</h2><p class="small">Dostęp wyłącznie dla prowadzącego. Wyniki uczestników nie są wyświetlane na stronie publicznej.</p><label for="managerUser">Login</label><input id="managerUser" type="text" autocomplete="username" value="MANAGER"><label for="managerPass">Hasło</label><input id="managerPass" type="password" autocomplete="current-password" placeholder="Hasło managera"><button onclick="managerLogin()">Zaloguj</button><div id="managerLoginInfo" class="status hidden"></div><button class="ghost" onclick="goHome()">Wróć</button></section>
+<section id="panel" class="card hidden">
+<h2>Panel MANAGERA</h2>
+<p class="small">Centralne wyniki z Google Sheets. Panel jest dostępny wyłącznie po zalogowaniu managera. Tutaj odblokowujesz POST oraz przeglądasz wyniki cząstkowe i pełne.</p>
+<div class="grid"><div><label for="unlockLogin">Login uczestnika</label><input id="unlockLogin" type="text" placeholder="np. SP8-01"></div><div><button onclick="unlockPost()">Odblokuj POST</button></div></div>
+<div id="managerInfo" class="status hidden"></div>
+<div id="managerStats"></div>
+<h3 style="margin-top:20px">Wyniki uczestników</h3>
+<p class="small">Zmiana = POST minus PRE. Kliknij „Pełne wyniki”, aby zobaczyć odpowiedzi i obszary dla wybranego uczestnika.</p>
+<div class="scroll"><table><thead><tr><th>Login</th><th>Typ</th><th>PRE</th><th>POST</th><th>Zmiana</th><th>Klasa</th><th></th></tr></thead><tbody id="managerRows"></tbody></table></div>
+<button onclick="refreshManager()">Odśwież wyniki</button><button class="ghost" onclick="managerLogout()">Wyloguj</button>
 </section>
-
-
-<!-- DANE UCZESTNIKA -->
-<section id="dataScreen" class="card hidden">
-
-<div>
-<span id="schoolBadge" class="badge"></span>
-<span id="modeBadge" class="badge"></span>
+<section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
+<div class="footer">
+  <b>JURA INFO 72H</b> · wersja centralna 2.1 · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
+  Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
+  <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
 </div>
-
-<h2>Dane badania</h2>
-
-<p class="small">
-Dane poniżej służą do prawidłowego przypisania wyniku. Nie wpisuj imienia ani nazwiska.
-</p>
-
-<div class="row">
-
-<label>
-Wiek
-<select id="wiek">
-<option value="">Wybierz</option>
-<option>10</option>
-<option>11</option>
-<option>12</option>
-<option>13</option>
-<option>14</option>
-<option>15</option>
-<option>16</option>
-<option>17</option>
-<option>18</option>
-</select>
-</label>
-
-<label>
-Klasa
-<input id="klasa" placeholder="np. 7">
-</label>
-
-</div>
-
-<label>
-Płeć
-<select id="plec">
-<option value="">Wybierz</option>
-<option>dziewczyna</option>
-<option>chłopak</option>
-<option>inna / nie chcę podawać</option>
-</select>
-</label>
-
-<label>
-Jak często korzystasz z internetu?
-<select id="internet">
-<option value="">Wybierz</option>
-<option>codziennie</option>
-<option>kilka razy w tygodniu</option>
-<option>rzadziej</option>
-</select>
-</label>
-
-<label>
-Z jakich źródeł informacji korzystasz najczęściej?
-<select id="zrodla">
-<option value="">Wybierz</option>
-<option>media społecznościowe</option>
-<option>serwisy informacyjne</option>
-<option>YouTube</option>
-<option>telewizja / radio</option>
-<option>inne</option>
-</select>
-</label>
-
-<label>
-Czy sprawdzasz informacje przed ich udostępnieniem?
-<select id="sprawdzanie">
-<option value="">Wybierz</option>
-<option>zawsze</option>
-<option>często</option>
-<option>czasami</option>
-<option>rzadko</option>
-</select>
-</label>
-
-<label>
-Czy zdarza Ci się udostępniać informacje bez sprawdzenia?
-<select id="udostepnienie">
-<option value="">Wybierz</option>
-<option>tak</option>
-<option>nie</option>
-<option>nie wiem</option>
-</select>
-</label>
-
-<button onclick="beginTest()">Rozpocznij badanie</button>
-
-</section>
-
-
-<!-- TEST -->
-<section id="testScreen" class="card hidden">
-
-<div>
-<span id="testSchoolBadge" class="badge"></span>
-<span id="testModeBadge" class="badge"></span>
-</div>
-
-<h2 id="testTitle">Badanie</h2>
-
-<div id="questions"></div>
-
-<button id="finishBtn" onclick="finishTest()">Zakończ badanie</button>
-
-</section>
-
-
-<!-- WYNIK -->
-<section id="resultScreen" class="card hidden">
-
-<div>
-<span id="resultSchoolBadge" class="badge"></span>
-<span id="resultModeBadge" class="badge"></span>
-</div>
-
-<h2>Wynik badania</h2>
-
-<div id="score" class="result"></div>
-
-<div id="resultText"></div>
-
-<div id="saveStatus" class="warn">
-Zapisywanie wyniku...
-</div>
-
-<br>
-
-<button onclick="newTest()">Nowe badanie</button>
-
-</section>
-
-
-<footer>
-
-<div>
-<strong>JURA INFO 72H</strong> · model:
-ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ
-</div>
-
-<br>
-
-<div>
-<strong>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</strong><br>
-Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.
-</div>
-
-<div>
-<strong>Nr konta: 12 1050 1591 1000 0023 2888 4826</strong>
-</div>
-
-</footer>
-
-</div>
-
-
+</main>
 <script>
-
-const CENTRAL_ENDPOINT =
-"https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
-
-let schoolType="";
-let mode="PRE";
-let participant={};
-let questions=[];
-let answers=[];
-
-
-/* =========================
-   PYTANIA
-========================= */
-
-const QUESTIONS = [
-
-{
-q:"Otrzymujesz wiadomość, że w Twojej okolicy wydarzył się groźny wypadek. Co robisz najpierw?",
-a:[
-"Udostępniam wiadomość znajomym.",
-"Sprawdzam źródło informacji.",
-"Komentuję wiadomość.",
-"Nie sprawdzam jej."
-],
-correct:1,
-area:"SPRAWDŹ"
-},
-
-{
-q:"W mediach społecznościowych pojawia się informacja, która wywołuje silne emocje. Co robisz?",
-a:[
-"Od razu ją udostępniam.",
-"Sprawdzam, kto ją opublikował.",
-"Piszę komentarz.",
-"Przesyłam ją wszystkim."
-],
-correct:1,
-area:"OCEŃ"
-},
-
-{
-q:"Znajomy przesyła Ci informację, której nie jesteś pewien.",
-a:[
-"Przekazuję ją dalej.",
-"Sprawdzam ją w innym źródle.",
-"Ignoruję wszystkie informacje.",
-"Publikuję ją w mediach."
-],
-correct:1,
-area:"SPRAWDŹ"
-},
-
-{
-q:"Która informacja jest bardziej wiarygodna?",
-a:[
-"Anonimowy wpis.",
-"Informacja bez źródła.",
-"Informacja z podanym i sprawdzalnym źródłem.",
-"Komentarz przypadkowej osoby."
-],
-correct:2,
-area:"OCEŃ"
-},
-
-{
-q:"W sytuacji kryzysowej pojawia się wiele sprzecznych informacji.",
-a:[
-"Przekazuję wszystkie dalej.",
-"Wybieram tę najbardziej emocjonalną.",
-"Sprawdzam informacje w kilku źródłach.",
-"Nie sprawdzam niczego."
-],
-correct:2,
-area:"SPRAWDŹ"
-},
-
-{
-q:"Co powinno zrobić się przed udostępnieniem ważnej informacji?",
-a:[
-"Sprawdzić źródło.",
-"Sprawdzić liczbę polubień.",
-"Sprawdzić komentarze.",
-"Udostępnić natychmiast."
-],
-correct:0,
-area:"PRZEKAŻ"
-},
-
-{
-q:"Informacja może być prawdziwa, ale wyrwana z kontekstu. Co robisz?",
-a:[
-"Udostępniam ją.",
-"Sprawdzam pełny kontekst.",
-"Nie interesuje mnie to.",
-"Zmienię jej treść."
-],
-correct:1,
-area:"OCEŃ"
-},
-
-{
-q:"Ktoś próbuje przekonać Cię do podjęcia decyzji poprzez bardzo emocjonalny komunikat.",
-a:[
-"Podejmuję decyzję natychmiast.",
-"Sprawdzam fakty i źródło.",
-"Udostępniam komunikat.",
-"Przekazuję go dalej."
-],
-correct:1,
-area:"ZDECYDUJ"
-},
-
-{
-q:"Widzisz informację, która może powodować panikę.",
-a:[
-"Udostępniam ją.",
-"Sprawdzam ją przed przekazaniem.",
-"Tworzę własną wersję.",
-"Przesyłam ją znajomym."
-],
-correct:1,
-area:"ZATRZYMAJ"
-},
-
-{
-q:"Najbardziej odpowiedzialny sposób przekazania ważnej informacji to:",
-a:[
-"Przekazanie jej bez sprawdzenia.",
-"Przekazanie jej wraz ze źródłem.",
-"Przekazanie jej w formie sensacyjnej.",
-"Przekazanie tylko fragmentu."
-],
-correct:1,
-area:"PRZEKAŻ"
-}
-
-];
-
-
-/* =========================
-   START
-========================= */
-
-function startSchool(type){
-
-schoolType=type;
-
-document.getElementById("schoolScreen").classList.add("hidden");
-document.getElementById("dataScreen").classList.remove("hidden");
-
-document.getElementById("schoolBadge").textContent =
-type==="SP" ? "Szkoła podstawowa" :
-"Szkoła ponadpodstawowa";
-
-document.getElementById("modeBadge").textContent=mode;
-
-}
-
-
-/* =========================
-   TEST
-========================= */
-
-function beginTest(){
-
-participant={
-wiek:document.getElementById("wiek").value,
-klasa:document.getElementById("klasa").value,
-plec:document.getElementById("plec").value,
-internet:document.getElementById("internet").value,
-zrodla:document.getElementById("zrodla").value,
-sprawdzanie:document.getElementById("sprawdzanie").value,
-udostepnienie:document.getElementById("udostepnienie").value
+const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
+const DATA={
+ SP:{name:'Szkoła podstawowa',badge:'SP · klasy 4–8',classes:['4','5','6','7','8'],pre:[{"q": "Na klasowej grupie ktoś pisze: „Jutro na pewno nie ma lekcji”, ale nie podaje źródła. Co robisz najpierw?", "a": ["Od razu przekazuję to rodzicom.", "Sprawdzam informację w oficjalnym źródle szkoły.", "Zakładam, że ktoś z klasy wie lepiej.", "Udostępniam wiadomość innym klasom."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Widzisz film, który ma pokazywać niezwykłe wydarzenie. Film jest bardzo emocjonalny. Co warto zrobić?", "a": ["Udostępnić, zanim zniknie.", "Sprawdzić, kto go opublikował i czy są inne źródła.", "Uznać go za prawdziwy, bo wygląda realistycznie.", "Ocenić prawdziwość tylko po komentarzach."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Post ma dużo polubień i komentarzy. Czy to oznacza, że informacja jest prawdziwa?", "a": ["Tak, dużo osób ją widziało.", "Nie. Popularność nie jest dowodem prawdziwości.", "Tak, jeśli komentarze są zgodne.", "Tak, jeśli post jest ładnie przygotowany."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz wiadomość: „Jeśli tego nie wyślesz 10 osobom, stanie się coś złego”. Co robisz?", "a": ["Wysyłam, żeby nic się nie stało.", "Nie przekazuję jej i sprawdzam, czy to prawdziwa informacja.", "Wysyłam tylko najlepszym znajomym.", "Robię zdjęcie i publikuję je na swoim profilu."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Kolega wysłał Ci niesprawdzoną wiadomość o rzekomym zagrożeniu. Co jest odpowiedzialne?", "a": ["Przekazać ją dalej na wszelki wypadek.", "Powiedzieć, że informacja nie jest jeszcze sprawdzona i nie rozpowszechniać jej.", "Dodać własny komentarz, żeby była ciekawsza.", "Wysłać ją wszystkim dorosłym, których znam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "W wiadomości widzisz zdjęcie z podpisem „dzisiejsze”. Nie ma daty ani miejsca. Co może być problemem?", "a": ["Nic, zdjęcie jest dowodem.", "Zdjęcie może pochodzić z innego czasu lub miejsca.", "Zdjęcia zawsze są prawdziwe.", "Brak daty oznacza, że wiadomość jest pilna."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Dwa wiarygodnie wyglądające posty podają sprzeczne informacje. Co robisz?", "a": ["Wybieram ten, który bardziej mi się podoba.", "Szukam źródła pierwotnego i dodatkowego potwierdzenia.", "Wybieram ten z większą liczbą lajków.", "Udostępniam oba bez komentarza."], "c": 1, "area": "OCEŃ"}, {"q": "Ktoś wykorzystał nazwę szkoły i jej logo, aby wysłać sensacyjną wiadomość. Co powinno wzbudzić Twoją uwagę?", "a": ["Logo oznacza, że wiadomość na pewno jest oficjalna.", "Sama grafika nie potwierdza źródła — trzeba sprawdzić oficjalny kanał szkoły.", "Im bardziej oficjalnie wygląda, tym bardziej jest prawdziwa.", "Nie trzeba nic sprawdzać."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Kiedy informacja dotyczy zdrowia lub bezpieczeństwa, co jest szczególnie ważne?", "a": ["Żeby była krótka i straszna.", "Żeby pochodziła ze sprawdzonego źródła i była potwierdzona.", "Żeby miała dużo udostępnień.", "Żeby wysłał ją ktoś znajomy."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Przed udostępnieniem informacji o zagrożeniu najlepiej:", "a": ["Sprawdzić źródło, datę, kontekst i potwierdzenie w innym wiarygodnym miejscu.", "Udostępnić ją jak najszybciej.", "Zmienić nagłówek na bardziej ostrzegawczy.", "Poprosić kolegę, żeby zdecydował za mnie."], "c": 0, "area": "PRZEKAŻ"}],post:[{"q": "Na czacie pojawia się informacja, że lekcje zostaną skrócone. Nikt nie podaje źródła. Co robisz?", "a": ["Sprawdzam oficjalną informację szkoły, zanim w nią uwierzę lub ją przekażę.", "Wysyłam ją wszystkim.", "Zakładam, że skoro ktoś napisał, to wie.", "Czekam na więcej emotikonów."], "c": 0, "area": "SPRAWDŹ"}, {"q": "Widzisz bardzo realistyczne zdjęcie przedstawiające rzekome wydarzenie. Co może pomóc w ocenie?", "a": ["Tylko to, czy zdjęcie wygląda prawdziwie.", "Źródło, data, miejsce, kontekst i niezależne potwierdzenie.", "Liczba komentarzy.", "To, czy zdjęcie jest kolorowe."], "c": 1, "area": "OCEŃ"}, {"q": "Kolega mówi: „Wszyscy tak piszą, więc to prawda”. Jak odpowiadasz?", "a": ["Ma rację, skoro wszyscy tak piszą.", "Popularność informacji nie jest dowodem jej prawdziwości.", "Tak, jeśli post ma dużo reakcji.", "Prawda zależy od liczby komentarzy."], "c": 1, "area": "OCEŃ"}, {"q": "Dostajesz pilne ostrzeżenie bez autora i bez linku do źródła. Co robisz?", "a": ["Natychmiast je udostępniam.", "Zatrzymuję się i szukam potwierdzenia w wiarygodnym źródle.", "Dodaję własne ostrzeżenie.", "Wysyłam je tylko jednej osobie."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Informacja o bezpieczeństwie może wywoływać silny strach. Co jest rozsądne?", "a": ["Udostępnić ją natychmiast, żeby nikt nie był zaskoczony.", "Najpierw sprawdzić informację i dopiero zdecydować, co przekazać.", "Uznać, że im bardziej straszna, tym bardziej prawdziwa.", "Oceniać ją tylko po emocjach."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Znajdujesz tę samą informację na dwóch stronach, ale obie kopiują ten sam nieznany post. Co robisz?", "a": ["Uznaję, że są dwa niezależne potwierdzenia.", "Szukam źródła pierwotnego i niezależnego potwierdzenia.", "Udostępniam obie strony.", "Wybieram tę z lepszą grafiką."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Ktoś używa zdjęcia szkoły i podpisu dyrektora, ale wiadomość nie jest na stronie szkoły. Co robisz?", "a": ["Uznaję ją za oficjalną.", "Sprawdzam oficjalny kanał szkoły lub pytam szkołę inną wiarygodną drogą.", "Przesyłam ją dalej.", "Zakładam, że podpis jest wystarczającym dowodem."], "c": 1, "area": "OCEŃ"}, {"q": "Przyjaciel prosi Cię o szybkie przesłanie niepotwierdzonej informacji. Co robisz?", "a": ["Przesyłam, bo to przyjaciel.", "Mówię, że najpierw chcę ją sprawdzić.", "Przesyłam tylko do jednej grupy.", "Dodaję „chyba prawda” i wysyłam."], "c": 1, "area": "PRZEKAŻ"}, {"q": "Gdy nie masz pewności, czy informacja jest prawdziwa, najlepszym rozwiązaniem jest:", "a": ["Przedstawić ją jako pewnik.", "Powstrzymać się od rozpowszechniania i sprawdzić źródła.", "Wybrać wersję, która pasuje do mojej opinii.", "Zapytać losową osobę w internecie."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Który zestaw najlepiej pomaga ocenić informację?", "a": ["Nagłówek + liczba lajków.", "Źródło + data + autor + kontekst + niezależne potwierdzenie.", "Kolor grafiki + liczba komentarzy.", "To, czy informacja jest zgodna z opinią znajomych."], "c": 1, "area": "OCEŃ"}]},
+ PP:{name:'Szkoła ponadpodstawowa',badge:'PP · liceum / technikum / branżowa',classes:['I','II','III','IV','V'],pre:[{"q": "Na grupie klasowej ktoś publikuje: <b>„PILNE! Jutro wszystkie szkoły w Porębie zostają zamknięte z powodu zagrożenia. Przekażcie wszystkim!”</b><br><br>Nie wiadomo, kto jest autorem. Co robisz jako pierwsze?", "a": ["Przesyłam ją dalej, żeby inni wiedzieli.", "Sprawdzam, czy informację potwierdza oficjalne źródło.", "Pytam kolegów, czy też o tym słyszeli.", "Zakładam, że skoro napisano „PILNE”, informacja jest ważna."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Pojawia się informacja: <b>„Jutro w mieście może zabraknąć wody”.</b><br><br>Którego źródła szukasz przede wszystkim?", "a": ["Komentarzy na Facebooku.", "Filmu influencera.", "Oficjalnego komunikatu właściwego przedsiębiorstwa lub urzędu.", "Wiadomości przesłanej przez znajomego."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Widzisz film z podpisem: <b>„Właśnie teraz! Wielka akcja służb w centrum miasta!”</b><br><br>Po sprawdzeniu okazuje się, że film został nagrany trzy lata wcześniej. Co jest najważniejszym problemem?", "a": ["Film ma dużo wyświetleń.", "Film może być prawdziwy, ale przedstawia wydarzenie z innego czasu.", "Film został nagrany telefonem.", "Film jest za krótki."], "c": 1, "area": "OCEŃ"}, {"q": "Post zawiera: <b>„JEŚLI MASZ DZIECI, NATYCHMIAST TO UDOSTĘPNIJ!!! WŁADZE UKRYWAJĄ PRAWDĘ!!!”</b><br><br>Nie ma podanego źródła ani dokumentów. Co powinno zwrócić uwagę?", "a": ["Silny język emocjonalny może być elementem manipulacji.", "Skoro ostrzega rodziców, informacja musi być prawdziwa.", "Dużo wykrzykników oznacza, że sprawa jest pilna.", "Należy natychmiast udostępnić."], "c": 0, "area": "ZDECYDUJ"}, {"q": "Otrzymujesz komunikat z profilu: <b>„POLICJA POLSKA – WAŻNY KOMUNIKAT”</b>.<br><br>Profil ma logo Policji, ale adres strony wygląda nietypowo. Co robisz?", "a": ["Uznaję komunikat za prawdziwy, bo jest logo.", "Udostępniam go znajomym.", "Sprawdzam komunikat w oficjalnym kanale Policji.", "Sprawdzam, ile osób go polubiło."], "c": 2, "area": "PRZEKAŻ"}, {"q": "Widzisz bardzo realistyczne zdjęcie przedstawiające rzekome wydarzenie kryzysowe. Nie wiadomo, kto je wykonał. Co robisz?", "a": ["Skoro wygląda realistycznie, jest prawdziwe.", "Sprawdzam źródło, datę, kontekst i szukam potwierdzenia w innych wiarygodnych źródłach.", "Pytam AI, czy zdjęcie jest prawdziwe, i przyjmuję jej odpowiedź.", "Udostępniam, ale dodaję „nie wiem, czy to prawda”."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Podczas lokalnego zdarzenia pojawiają się trzy informacje: anonimowy użytkownik, lokalny profil informacyjny i oficjalne służby. Informacje są sprzeczne. Co robisz?", "a": ["Wybieram tę, która brzmi najbardziej przekonująco.", "Wybieram tę, którą udostępniło najwięcej osób.", "Sprawdzam oficjalny komunikat i aktualność informacji.", "Wybieram pierwszą informację, którą zobaczyłem."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Znajomy wysyła: <b>„Nie wiem, czy to prawda, ale podobno…”</b> i prosi: <b>„Podeślij dalej wszystkim!”</b> Co robisz?", "a": ["Udostępniam, bo znajomy ostrzegł.", "Udostępniam i dopisuję „prawdopodobnie”.", "Najpierw próbuję zweryfikować informację.", "Udostępniam tylko najbliższym znajomym."], "c": 2, "area": "OCEŃ"}, {"q": "Dwa popularne profile przedstawiają zupełnie różne informacje o tym samym wydarzeniu. Co robisz?", "a": ["Wybieram informację zgodną z moimi poglądami.", "Wybieram profil z większą liczbą obserwujących.", "Sprawdzam źródła obu informacji i szukam niezależnego potwierdzenia.", "Uznaję, że prawdy nie da się ustalić."], "c": 2, "area": "ZDECYDUJ"}, {"q": "Masz informację, która może być ważna dla innych, ale nie masz pewności, czy jest prawdziwa. Wybierz właściwą kolejność:", "a": ["PRZEKAŻ → SPRAWDŹ → OCEŃ → ZDECYDUJ → ZATRZYMAJ", "ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ", "SPRAWDŹ → ZATRZYMAJ → ZDECYDUJ → OCEŃ → PRZEKAŻ", "ZDECYDUJ → OCEŃ → SPRAWDŹ → ZATRZYMAJ → PRZEKAŻ"], "c": 1, "area": "PRZEKAŻ"}],post:[{"q": "Na grupie pojawia się: <b>„UWAGA! Ewakuacja szkoły jutro o 8:00. Nauczyciele nic nie mówią, ale ktoś dostał wiadomość od znajomego z urzędu.”</b><br><br>Co robisz najpierw?", "a": ["Udostępniam informację rodzicom.", "Sprawdzam oficjalny komunikat szkoły/służb lub właściwej instytucji.", "Pytam kolegów, czy też coś wiedzą.", "Przyjmuję informację jako prawdziwą."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "W internecie pojawia się informacja: <b>„Awaria systemu spowoduje dziś problemy z funkcjonowaniem miasta”.</b><br><br>Które źródło będzie dla Ciebie najważniejsze?", "a": ["TikTok.", "Komentarze mieszkańców.", "Oficjalny komunikat odpowiedniej instytucji.", "Popularny lokalny profil."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Widzisz zdjęcie przedstawiające zalaną ulicę z podpisem: <b>„Tak wygląda Poręba dzisiaj”.</b><br><br>Nie wiadomo, kiedy i gdzie zdjęcie wykonano. Co robisz?", "a": ["Zakładam, że jest aktualne.", "Sprawdzam datę, miejsce i źródło zdjęcia.", "Patrzę na liczbę polubień.", "Udostępniam z pytajnikiem."], "c": 1, "area": "OCEŃ"}, {"q": "Post mówi: <b>„MEDIA TEGO NIE POKAŻĄ! TYLKO MY MÓWIMY PRAWDĘ! UDOSTĘPNIJ, ZANIM USUNĄ!”</b><br><br>Nie podano źródeł. Co robisz?", "a": ["Traktuję to jako dowód, że informacja jest prawdziwa.", "Zwracam uwagę na emocjonalny język i brak weryfikowalnego źródła.", "Udostępniam znajomym.", "Uznaję, że skoro ktoś tak mocno ostrzega, musi wiedzieć więcej."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Pojawia się profil: <b>„URZĄD MIASTA – PILNE INFORMACJE”</b>. Ma herb miasta i wiele podobnych postów. Co sprawdzasz?", "a": ["Liczbę obserwujących.", "Liczbę komentarzy.", "Czy profil i komunikat są powiązane z oficjalnym kanałem urzędu.", "Czy znajomi go obserwują."], "c": 2, "area": "PRZEKAŻ"}, {"q": "Oglądasz film, na którym znana osoba wypowiada bardzo kontrowersyjne słowa. Film wygląda realistycznie. Co robisz?", "a": ["Uznaję go za prawdziwy.", "Sprawdzam źródło filmu i szukam niezależnego potwierdzenia.", "Udostępniam go, zanim zostanie usunięty.", "Zakładam, że każdy film może być prawdziwy."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Podczas kryzysu masz pięć sprzecznych komunikatów. Znajomi naciskają: <b>„Szybko! Musimy wiedzieć, co się dzieje!”</b> Co robisz?", "a": ["Wybieram najbardziej dramatyczną wersję.", "Sprawdzam aktualne informacje ze źródeł oficjalnych i wiarygodnych.", "Wybieram informację z największą liczbą udostępnień.", "Przekazuję wszystkie informacje dalej."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Znajomy pisze: <b>„Mój kolega pracuje w urzędzie i mówi, że…”</b>, ale nie podaje szczegółów. Co robisz?", "a": ["Traktuję ją jak informację oficjalną.", "Przekazuję dalej.", "Traktuję ją jako niepotwierdzoną i próbuję znaleźć niezależne potwierdzenie.", "Uznaję ją za prawdziwą, bo znajomy zna pracownika urzędu."], "c": 2, "area": "OCEŃ"}, {"q": "Film dotyczący kryzysu ma milion wyświetleń. Oficjalny komunikat instytucji ma 500 wyświetleń. Który fakt jest najważniejszy przy ocenie wiarygodności?", "a": ["Liczba wyświetleń.", "Liczba komentarzy.", "Źródło, możliwość jego sprawdzenia i zgodność z innymi wiarygodnymi informacjami.", "Popularność autora."], "c": 2, "area": "ZDECYDUJ"}, {"q": "Uzupełnij model działania. Wybierz właściwą kolejność:", "a": ["OCEŃ → ZATRZYMAJ → SPRAWDŹ → PRZEKAŻ → ZDECYDUJ", "ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ", "SPRAWDŹ → OCEŃ → ZATRZYMAJ → ZDECYDUJ → PRZEKAŻ", "ZDECYDUJ → SPRAWDŹ → OCEŃ → PRZEKAŻ → ZATRZYMAJ"], "c": 1, "area": "PRZEKAŻ"}]}
 };
-
-questions=QUESTIONS;
-answers=[];
-
-document.getElementById("dataScreen").classList.add("hidden");
-document.getElementById("testScreen").classList.remove("hidden");
-
-document.getElementById("testSchoolBadge").textContent =
-schoolType==="SP" ? "SP · klasy 4–8" :
-"PP · liceum / technikum / branżowa";
-
-document.getElementById("testModeBadge").textContent=mode;
-
-renderQuestions();
-
-}
-
-
-function renderQuestions(){
-
-const box=document.getElementById("questions");
-
-box.innerHTML="";
-
-questions.forEach((item,index)=>{
-
-const q=document.createElement("div");
-
-q.className="question";
-
-q.innerHTML=
-"<strong>"+(index+1)+". "+item.q+"</strong>";
-
-const answersBox=document.createElement("div");
-
-answersBox.className="answers";
-
-item.a.forEach((answer,j)=>{
-
-const label=document.createElement("label");
-
-label.innerHTML=
-'<input type="radio" name="q'+index+'" value="'+j+'"> '+answer;
-
-answersBox.appendChild(label);
-
-});
-
-q.appendChild(answersBox);
-
-box.appendChild(q);
-
-});
-
-}
-
-
-/* =========================
-   ZAKOŃCZENIE
-========================= */
-
-async function finishTest(){
-
-let score=0;
-let areas={};
-
-questions.forEach((item,index)=>{
-
-const selected=
-document.querySelector('input[name="q'+index+'"]:checked');
-
-let value=selected ? Number(selected.value) : -1;
-
-answers[index]=value;
-
-if(value===item.correct){
-score++;
-areas[item.area]=(areas[item.area]||0)+1;
-}
-
-});
-
-const max=questions.length;
-
-const id=
-"JURA-"+Date.now()+"-"+Math.random().toString(36).slice(2,8);
-
-const record={
-
-id:id,
-tryb:mode,
-wynik:score,
-maks:max,
-
-data:new Date().toISOString(),
-
-wiek:participant.wiek,
-klasa:participant.klasa,
-plec:participant.plec,
-
-internet:participant.internet,
-zrodla:participant.zrodla,
-sprawdzanie:participant.sprawdzanie,
-udostepnienie:participant.udostepnienie,
-
-obszary:areas,
-typSzkoly:schoolType
-
-};
-
-
-/* lokalny zapis */
-
-try{
-
-const old=
-JSON.parse(localStorage.getItem("jura72h_diag_master_v2")||"[]");
-
-old.push(record);
-
-localStorage.setItem(
-"jura72h_diag_master_v2",
-JSON.stringify(old)
-);
-
-}catch(e){}
-
-
-/* ekran wyniku */
-
-document.getElementById("testScreen").classList.add("hidden");
-document.getElementById("resultScreen").classList.remove("hidden");
-
-document.getElementById("resultSchoolBadge").textContent =
-schoolType==="SP" ? "SP · klasy 4–8" :
-"PP · liceum / technikum / branżowa";
-
-document.getElementById("resultModeBadge").textContent=mode;
-
-document.getElementById("score").textContent=
-score+"/"+max;
-
-document.getElementById("resultText").innerHTML=
-'<p>Wynik został zapisany lokalnie na urządzeniu.</p>';
-
-document.getElementById("saveStatus").className="warn";
-document.getElementById("saveStatus").textContent=
-"Wysyłanie wyniku do bazy centralnej...";
-
-
-/* wysłanie */
-
-const saved=await sendToCentral(record);
-
-if(saved){
-
-document.getElementById("saveStatus").className="ok";
-
-document.getElementById("saveStatus").textContent=
-"✓ Wynik zapisany na urządzeniu i potwierdzony w centralnej bazie.";
-
-}else{
-
-document.getElementById("saveStatus").className="warn";
-
-document.getElementById("saveStatus").textContent=
-"✓ Wynik zapisany lokalnie. Nie udało się teraz potwierdzić zapisu w bazie centralnej.";
-
-}
-
-}
-
-
-/* =========================
-   POST DO APPS SCRIPT
-========================= */
-
+const STORAGE='jura72h_diag_master_v2';
+let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='';
+const MANAGER_TOKEN_KEY='jura72h_manager_token';
+function $(id){return document.getElementById(id)}
+function hideAll(){['home','modeSelect','meta','quiz','result','managerLogin','panel','fullResults'].forEach(x=>$(x).classList.add('hidden'))}
+function chooseSchool(t){school=t;$('schoolBadgeMode').textContent=DATA[t].badge;const sel=$('class');sel.innerHTML='<option value="">Wybierz</option>'+DATA[t].classes.map(c=>'<option>'+c+'</option>').join('');const src=['social','youtube','news','official','friends','other'];const lab=['media społecznościowe','YouTube / TikTok','portale informacyjne','oficjalne strony instytucji','rodzina / znajomi','inne'];$('sources').innerHTML=src.map((s,n)=>'<label class="opt"><input type="checkbox" name="source" value="'+s+'">'+lab[n]+'</label>').join('');$('pidMode').value='';$('postHintMode').textContent='POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.';$('postModeBtn').disabled=false;$('postModeBtn').style.opacity='1';hideAll();$('modeSelect').classList.remove('hidden')}
+function readMeta(){meta={wiek:$('age').value,klasa:$('class').value,plec:$('gender').value,internet:$('net').value,zrodla:[...document.querySelectorAll('input[name="source"]:checked')].map(x=>x.value),edukacja:$('education').value,sprawdzanie:$('checking').value,udostepnienie:$('mistake').value}}
+function preparePRE(){pid=$('pidMode').value.trim();if(!pid){alert('Wpisz login uczestnika.');return}mode='PRE';openMetaForMode()}
+function preparePOST(){pid=$('pidMode').value.trim();if(!pid){alert('Wpisz ponownie login użyty podczas PRE.');return}const btn=$('postModeBtn');btn.disabled=true;btn.textContent='Sprawdzanie…';jsonp('status',{login:pid},result=>{btn.textContent='POST — po projekcie';btn.disabled=false;if(result&&result.ok&&result.pre&&result.postUnlocked&&!result.postDone){mode='POST';openMetaForMode()}else if(result&&result.ok&&!result.pre){alert('Nie znaleziono wykonanego PRE dla tego loginu. Wpisz dokładnie ten sam login, którego użyto podczas PRE.')}else if(result&&result.postDone){alert('POST dla tego loginu został już wykonany.')}else{alert('POST nie został jeszcze odblokowany przez prowadzącego.')}})}
+function openMetaForMode(){readMeta();$('schoolBadge').textContent=DATA[school].badge;$('metaModeBadge').textContent=mode;$('startTestBtn').textContent=mode==='PRE'?'Rozpocznij PRE':'Rozpocznij POST';hideAll();$('meta').classList.remove('hidden')}
+function startPreparedTest(){if(!pid){alert('Brak loginu uczestnika.');return}readMeta();qs=DATA[school][mode==='PRE'?'pre':'post'];i=0;answers=[];scoreValue=0;hideAll();$('schoolQ').textContent=DATA[school].badge;$('mode').textContent=mode;$('quiz').classList.remove('hidden');render()}
+function backToModeSelect(){$('pidMode').value=pid||'';hideAll();$('modeSelect').classList.remove('hidden')}
+function begin(m){if(m==='POST')preparePOST();else preparePRE()}
+function requestPostAccess(){preparePOST()}
+function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
+function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
+function jsonp(action,params,done){const cb='jura72h_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');let finished=false;const finishResult=r=>{if(finished)return;finished=true;try{delete window[cb]}catch(e){window[cb]=undefined}try{script.remove()}catch(e){}done(r)};window[cb]=finishResult;script.onerror=()=>finishResult({ok:false,error:'Błąd połączenia'});const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb)];Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));script.src=CENTRAL_ENDPOINT+'?'+q.join('&')+'&v=20261003POSTMANAGER22';document.body.appendChild(script);setTimeout(()=>finishResult({ok:false,error:'Timeout'}),10000)}
 async function sendToCentral(record){
-
-return new Promise(function(resolve){
-
-const iframeName=
-"jura72h_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-
-const iframe=document.createElement("iframe");
-
-iframe.name=iframeName;
-iframe.style.display="none";
-
-document.body.appendChild(iframe);
-
-const form=document.createElement("form");
-
-form.method="POST";
-form.action=CENTRAL_ENDPOINT;
-form.target=iframeName;
-form.style.display="none";
-
-const input=document.createElement("input");
-
-input.type="hidden";
-input.name="data";
-
-input.value=JSON.stringify({
-action:"save",
-record:record
-});
-
-form.appendChild(input);
-
-document.body.appendChild(form);
-
-let finished=false;
-
-function finish(ok){
-
-if(finished)return;
-
-finished=true;
-
-try{
-form.remove();
-iframe.remove();
-}catch(e){}
-
-resolve(ok);
-
+  try{
+    const body='data='+encodeURIComponent(JSON.stringify({action:'save',record:record}));
+    await fetch(CENTRAL_ENDPOINT,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body:body,
+      keepalive:true
+    });
+    return true;
+  }catch(e){
+    return false;
+  }
 }
-
-
-/*
-   Apps Script nie daje nam
-   bezpośrednio odpowiedzi POST
-   przez iframe.
-
-   Dlatego po wysłaniu czekamy
-   chwilę na zapis serwerowy.
-*/
-
-form.submit();
-
-setTimeout(function(){
-
-finish(true);
-
-},1800);
-
-setTimeout(function(){
-
-finish(false);
-
-},8000);
-
-});
-
+async function finish(){const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta,obszary:answers,typSzkoly:school};let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);$('saveInfo').className='status';$('saveInfo').textContent='Zapisywanie wyniku w bazie centralnej…';const ok=await sendToCentral(record);$('saveInfo').textContent=ok?'✓ Wynik zapisany w bazie centralnej.':'✓ Wynik zapisany lokalnie. Nie udało się potwierdzić zapisu w bazie centralnej.';if(!ok)$('saveInfo').className='status warn'}
+function interpret(s){if(s<=3)return'Wynik wskazuje na potrzebę intensywnego rozwijania kompetencji w zakresie krytycznej analizy informacji.';if(s<=5)return'Widoczne są podstawowe kompetencje, ale część sytuacji wymaga dodatkowego ćwiczenia.';if(s<=7)return'Kompetencje są częściowo rozwinięte; warto wzmacniać samodzielne sprawdzanie źródeł i ocenę wiarygodności.';if(s<=9)return'Wynik wskazuje na dobre opanowanie większości badanych zachowań informacyjnych.';return'Wynik wskazuje na bardzo dobre opanowanie badanych zachowań informacyjnych.'}
+function newTest(){hideAll();$('home').classList.remove('hidden')}
+function goHome(){hideAll();$('home').classList.remove('hidden')}
+function openManagerLogin(){hideAll();$('managerLogin').classList.remove('hidden');$('managerPass').value='';$('managerLoginInfo').classList.add('hidden')}
+function managerLogin(){const u=$('managerUser').value.trim()||'MANAGER',p=$('managerPass').value;if(u!=='MANAGER'||!p){alert('Podaj login i hasło.');return}$('managerLoginInfo').className='status';$('managerLoginInfo').classList.remove('hidden');$('managerLoginInfo').textContent='Logowanie…';jsonp('managerLogin',{user:u,password:p},r=>{if(r&&r.ok&&r.token){managerToken=r.token;sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);$('managerLoginInfo').textContent='Zalogowano.';loadManagerData()}else{$('managerLoginInfo').className='status warn';$('managerLoginInfo').textContent='Nieprawidłowy login lub hasło.'}})}
+function loadManagerData(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
+function parseAreas(value){
+  if(!value) return [];
+  try{
+    const a=typeof value==='string'?JSON.parse(value):value;
+    if(Array.isArray(a)) return a.map(x=>({area:String(x.area||''),selected:Number(x.selected??-1),correct:!!x.correct}));
+  }catch(e){}
+  return [];
 }
-
-
-/* =========================
-   NOWE BADANIE
-========================= */
-
-function newTest(){
-
-location.reload();
-
+function areaLabel(a){return {ZATRZYMAJ:'ZATRZYMAJ',SPRAWDŹ:'SPRAWDŹ',OCEŃ:'OCEŃ',ZDECYDUJ:'ZDECYDUJ',PRZEKAŻ:'PRZEKAŻ'}[a]||a||'—'}
+function areaSummary(row){
+  const a=parseAreas(row.OBSZARY), out={};
+  a.forEach(x=>{if(!out[x.area])out[x.area]={n:0,c:0};out[x.area].n++;if(x.correct)out[x.area].c++;});
+  return Object.keys(out).map(k=>areaLabel(k)+' '+out[k].c+'/'+out[k].n).join(' · ');
 }
-
-</script>
-
-</body>
-</html>
+function participantGroups(rows){
+  const g={};
+  rows.forEach(r=>{const id=String(r.ID||'').trim();if(!id)return;if(!g[id])g[id]={id,rows:[]};g[id].rows.push(r)});
+  return Object.values(g).map(g=>{
+    const pre=g.rows.find(x=>x.TRYB==='PRE'),post=g.rows.find(x=>x.TRYB==='POST');
+    return {id:g.id,pre,post,school:(post||pre||{}).TYP_SZKOŁY||'',klass:(post||pre||{}).KLASA||''};
+  }).sort((a,b)=>a.id.localeCompare(b.id));
+}
+function refreshManager(){
+  if(!managerToken){openManagerLogin();return}
+  $('managerStats').innerHTML='<p class="small">Pobieranie danych…</p>';
+  jsonp('managerData',{token:managerToken},r=>{
+    if(!r||!r.ok){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);alert('Sesja managera wygasła.');openManagerLogin();return}
+    const rows=r.wyniki||[], pre=rows.filter(x=>x.TRYB==='PRE'), post=rows.filter(x=>x.TRYB==='POST'), groups=participantGroups(rows);
+    $('managerStats').innerHTML='<p><b>Uczestników:</b> '+groups.length+' · <b>Rekordów:</b> '+rows.length+' · <b>PRE:</b> '+pre.length+' · <b>POST:</b> '+post.length+'</p>';
+    $('managerRows').innerHTML=groups.map(g=>{
+      const pv=g.pre?Number(g.pre.WYNIK):null, qv=g.post?Number(g.post.WYNIK):null, delta=(pv!==null&&qv!==null)?qv-pv:null;
+      const ds=delta===null?'—':(delta>0?'+'+delta:String(delta));
+      return '<tr><td><b>'+escapeHtml(g.id)+'</b></td><td>'+escapeHtml(g.school)+'</td><td>'+(g.pre?escapeHtml(String(g.pre.WYNIK))+'/'+escapeHtml(String(g.pre.MAKS||10)):'—')+'</td><td>'+(g.post?escapeHtml(String(g.post.WYNIK))+'/'+escapeHtml(String(g.post.MAKS||10)):'—')+'</td><td><b>'+escapeHtml(ds)+'</b></td><td>'+escapeHtml(g.klass)+'</td><td><button style="margin:0;padding:8px 10px;font-size:12px" data-login="'+escapeHtml(g.id)+'" onclick="showFullResults(this.dataset.login)">Pełne wyniki</button></td></tr>';
+    }).join('');
+    window.juraManagerRows=rows;
+  });
+}
+function showFullResults(login){
+  if(!managerToken)return;
+  const rows=(window.juraManagerRows||[]).filter(r=>String(r.ID||'')===String(login));
+  if(!rows.length)return;
+  const pre=rows.find(r=>r.TRYB==='PRE'),post=rows.find(r=>r.TRYB==='POST'),pv=pre?Number(pre.WYNIK):null,qv=post?Number(post.WYNIK):null,delta=(pv!==null&&qv!==null)?qv-pv:null;
+  $('fullLogin').textContent=login;
+  $('fullSchool').textContent=(post||pre||{}).TYP_SZKOŁY||'';
+  $('fullSummary').innerHTML='<p><b>PRE:</b> '+(pre?pre.WYNIK+'/'+(pre.MAKS||10):'brak')+' · <b>POST:</b> '+(post?post.WYNIK+'/'+(post.MAKS||10):'brak')+' · <b>Zmiana:</b> '+(delta===null?'—':(delta>0?'+'+delta:String(delta)))+'</p>'+(pre?'<p><b>Obszary PRE:</b> '+escapeHtml(areaSummary(pre)||'brak zapisanych danych')+'</p>':'')+(post?'<p><b>Obszary POST:</b> '+escapeHtml(areaSummary(post)||'brak zapisanych danych')+'</p>':'')+'<p class="small">Obszary są prezentowane jako liczba poprawnych odpowiedzi / liczba pytań.</p>';
+  $('fullDetails').innerHTML=rows.sort((a,b)=>String(a.TRYB).localeCompare(String(b.TRYB))).map(r=>{
+    const m=[];
+    if(r.KLASA)m.push('Klasa: '+escapeHtml(r.KLASA));
+    if(r.PŁEĆ)m.push('Płeć: '+escapeHtml(r.PŁEĆ));
+    if(r.WIEK)m.push('Wiek: '+escapeHtml(r.WIEK));
+    return '<div class="card" style="box-shadow:none;border:1px solid #e5e7eb;margin:12px 0"><h3>'+escapeHtml(r.TRYB)+' · '+escapeHtml(String(r.WYNIK||''))+'/'+escapeHtml(String(r.MAKS||10))+'</h3><p class="small">'+m.join(' · ')+'</p><p><b>Obszary:</b> '+escapeHtml(areaSummary(r)||'brak zapisanych danych')+'</p></div>';
+  }).join('');
+  hideAll();$('fullResults').classList.remove('hidden');
+}
+function backToPanel(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
+function unlockPost(){const login=$('unlockLogin').value.trim();if(!login){alert('Wpisz login uczestnika.');return}jsonp('unlockPost',{token:managerToken,login:login},r=>{const box=$('managerInfo');box.className='status';box.classList.remove('hidden');box.textContent=r&&r.ok?'✓ POST odblokowany dla: '+login:'Nie udało się odblokować: '+((r&&r.error)||'błąd');if(r&&r.ok)refreshManager()})}
+function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);goHome()}
+function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+(function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||''})();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script></body></html>
