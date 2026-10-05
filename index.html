@@ -39,7 +39,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.6 — LOGOWANIE MANAGERA UNIVERSAL + ZAPAMIĘTANIE SESJI</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.7 — LOGOWANIE MANAGERA + POWRÓT AUTOMATYCZNY</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -57,7 +57,7 @@ const DATA={
 };
 const STORAGE='jura72h_diag_master_v2';
 let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='',testStartData='';
-const APP_VERSION='3.5.0';
+const APP_VERSION='3.7.0';
 const UNIVERSAL_STATUS_KEY='jura72h_universal_status';
 const UNIVERSAL_POST_RETURN='https://jurajskiartefakt-creator.github.io/-jura-info-72h/';
 const MANAGER_TOKEN_KEY='jura72h_manager_token';
@@ -479,11 +479,18 @@ function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;',
   try{
     const hash=String(location.hash||'');
     const m=hash.match(/(?:^|&)managerToken=([^&]+)/);
+    const rememberParam=new URLSearchParams(location.search).get('managerRemember')==='1';
     if(m){
       managerToken=decodeURIComponent(m[1]);
-      const remember=(localStorage.getItem('jura72h_manager_remember')==='1');
-      (remember?localStorage:sessionStorage).setItem(MANAGER_TOKEN_KEY,managerToken);
-      history.replaceState(null,document.title,location.pathname+location.search);
+      const remember=rememberParam || (localStorage.getItem('jura72h_manager_remember')==='1');
+      if(remember){
+        localStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
+        localStorage.setItem('jura72h_manager_remember','1');
+        sessionStorage.removeItem(MANAGER_TOKEN_KEY);
+      }else{
+        sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
+      }
+      history.replaceState(null,document.title,location.pathname);
     }else{
       managerToken=localStorage.getItem(MANAGER_TOKEN_KEY)||sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
     }
