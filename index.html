@@ -2,7 +2,7 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="MOBILE-POST-FIX-2.9-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v2.9</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.0-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.0</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
@@ -17,7 +17,7 @@
 <label for="mistake">Czy zdarzyło Ci się udostępnić informację, która później okazała się nieprawdziwa?</label><select id="mistake"><option value="">Wybierz</option><option>tak</option><option>nie</option><option>nie wiem</option></select>
 <button id="startTestBtn" onclick="startPreparedTest()">Rozpocznij badanie</button><button class="ghost" onclick="backToModeSelect()">Wróć</button></section>
 <section id="quiz" class="card hidden"><div><span class="badge" id="schoolQ"></span><span class="badge" id="mode"></span> <span class="qnum">Pytanie <span id="num"></span>/10</span></div><div class="question" id="question"></div><div id="answers"></div><button id="next" onclick="nextQuestion()">Dalej</button></section>
-<section id="result" class="card hidden"><span class="badge" id="resultSchool"></span><span class="badge" id="resultMode"></span><h2>Wynik badania</h2><div class="score"><span id="score"></span>/10</div><p id="interpret" class="lead"></p><div id="saveInfo" class="status">Zapisywanie wyniku…</div><button onclick="newTest()">Nowe badanie</button></section>
+<section id="result" class="card hidden"><span class="badge" id="resultSchool"></span><span class="badge" id="resultMode"></span><h2>Wynik badania</h2><div class="score"><span id="score"></span>/10</div><p id="interpret" class="lead"></p><div id="saveInfo" class="status">Zapisywanie wyniku…</div><div id="resultNext"></div><button onclick="newTest()">Nowe badanie</button></section>
 <section id="managerLogin" class="card hidden"><h2>Panel MANAGERA</h2><p class="small">Dostęp wyłącznie dla prowadzącego. Wyniki uczestników nie są wyświetlane na stronie publicznej.</p><label for="managerUser">Login</label><input id="managerUser" type="text" autocomplete="username" value="MANAGER"><label for="managerPass">Hasło</label><input id="managerPass" type="password" autocomplete="current-password" placeholder="Hasło managera"><button onclick="managerLogin()">Zaloguj</button><div id="managerLoginInfo" class="status hidden"></div><button class="ghost" onclick="goHome()">Wróć</button></section>
 <section id="panel" class="card hidden">
 <h2>Panel MANAGERA</h2>
@@ -27,16 +27,20 @@
 <div id="managerStats"></div>
 <h3 style="margin-top:20px">Wyniki uczestników</h3>
 <p class="small">Zmiana = POST minus PRE. Kliknij „Pełne wyniki”, aby zobaczyć odpowiedzi i obszary dla wybranego uczestnika.</p>
-<div class="scroll"><table><thead><tr><th>Login</th><th>Typ</th><th>PRE</th><th>POST</th><th>Zmiana</th><th>Klasa</th><th></th></tr></thead><tbody id="managerRows"></tbody></table></div>
+<div class="scroll"><table><thead><tr><th>Login</th><th>Typ</th><th>Wiek</th><th>Klasa</th><th>PRE</th><th>POST</th><th>Zmiana</th><th>Data PRE</th><th>Data POST</th><th></th></tr></thead><tbody id="managerRows"></tbody></table></div>
 <button onclick="refreshManager()">Odśwież wyniki</button><button class="ghost" onclick="managerLogout()">Wyloguj</button>
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 2.9 — SAVE JSONP FIX</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.0 — UNIVERSAL MOBILE + DATA RESEARCH</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
 </div>
+<form id="universalSaveForm" method="POST" action="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec" target="juraSaveFrame" style="display:none">
+  <input type="hidden" name="data" id="universalSaveData">
+</form>
+<iframe name="juraSaveFrame" id="juraSaveFrame" title="save" style="display:none"></iframe>
 </main>
 <script>
 const CENTRAL_ENDPOINT="https://script.google.com/macros/s/AKfycbzixMCGcZdOTuBDu_ziK447Twj_3B3fQNztgUaWT4DfbG9ZGTXq6ssUM4f7i250DNQ/exec";
@@ -45,7 +49,10 @@ const DATA={
  PP:{name:'Szkoła ponadpodstawowa',badge:'PP · liceum / technikum / branżowa',classes:['I','II','III','IV','V'],pre:[{"q": "Na grupie klasowej ktoś publikuje: <b>„PILNE! Jutro wszystkie szkoły w Porębie zostają zamknięte z powodu zagrożenia. Przekażcie wszystkim!”</b><br><br>Nie wiadomo, kto jest autorem. Co robisz jako pierwsze?", "a": ["Przesyłam ją dalej, żeby inni wiedzieli.", "Sprawdzam, czy informację potwierdza oficjalne źródło.", "Pytam kolegów, czy też o tym słyszeli.", "Zakładam, że skoro napisano „PILNE”, informacja jest ważna."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Pojawia się informacja: <b>„Jutro w mieście może zabraknąć wody”.</b><br><br>Którego źródła szukasz przede wszystkim?", "a": ["Komentarzy na Facebooku.", "Filmu influencera.", "Oficjalnego komunikatu właściwego przedsiębiorstwa lub urzędu.", "Wiadomości przesłanej przez znajomego."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Widzisz film z podpisem: <b>„Właśnie teraz! Wielka akcja służb w centrum miasta!”</b><br><br>Po sprawdzeniu okazuje się, że film został nagrany trzy lata wcześniej. Co jest najważniejszym problemem?", "a": ["Film ma dużo wyświetleń.", "Film może być prawdziwy, ale przedstawia wydarzenie z innego czasu.", "Film został nagrany telefonem.", "Film jest za krótki."], "c": 1, "area": "OCEŃ"}, {"q": "Post zawiera: <b>„JEŚLI MASZ DZIECI, NATYCHMIAST TO UDOSTĘPNIJ!!! WŁADZE UKRYWAJĄ PRAWDĘ!!!”</b><br><br>Nie ma podanego źródła ani dokumentów. Co powinno zwrócić uwagę?", "a": ["Silny język emocjonalny może być elementem manipulacji.", "Skoro ostrzega rodziców, informacja musi być prawdziwa.", "Dużo wykrzykników oznacza, że sprawa jest pilna.", "Należy natychmiast udostępnić."], "c": 0, "area": "ZDECYDUJ"}, {"q": "Otrzymujesz komunikat z profilu: <b>„POLICJA POLSKA – WAŻNY KOMUNIKAT”</b>.<br><br>Profil ma logo Policji, ale adres strony wygląda nietypowo. Co robisz?", "a": ["Uznaję komunikat za prawdziwy, bo jest logo.", "Udostępniam go znajomym.", "Sprawdzam komunikat w oficjalnym kanale Policji.", "Sprawdzam, ile osób go polubiło."], "c": 2, "area": "PRZEKAŻ"}, {"q": "Widzisz bardzo realistyczne zdjęcie przedstawiające rzekome wydarzenie kryzysowe. Nie wiadomo, kto je wykonał. Co robisz?", "a": ["Skoro wygląda realistycznie, jest prawdziwe.", "Sprawdzam źródło, datę, kontekst i szukam potwierdzenia w innych wiarygodnych źródłach.", "Pytam AI, czy zdjęcie jest prawdziwe, i przyjmuję jej odpowiedź.", "Udostępniam, ale dodaję „nie wiem, czy to prawda”."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Podczas lokalnego zdarzenia pojawiają się trzy informacje: anonimowy użytkownik, lokalny profil informacyjny i oficjalne służby. Informacje są sprzeczne. Co robisz?", "a": ["Wybieram tę, która brzmi najbardziej przekonująco.", "Wybieram tę, którą udostępniło najwięcej osób.", "Sprawdzam oficjalny komunikat i aktualność informacji.", "Wybieram pierwszą informację, którą zobaczyłem."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Znajomy wysyła: <b>„Nie wiem, czy to prawda, ale podobno…”</b> i prosi: <b>„Podeślij dalej wszystkim!”</b> Co robisz?", "a": ["Udostępniam, bo znajomy ostrzegł.", "Udostępniam i dopisuję „prawdopodobnie”.", "Najpierw próbuję zweryfikować informację.", "Udostępniam tylko najbliższym znajomym."], "c": 2, "area": "OCEŃ"}, {"q": "Dwa popularne profile przedstawiają zupełnie różne informacje o tym samym wydarzeniu. Co robisz?", "a": ["Wybieram informację zgodną z moimi poglądami.", "Wybieram profil z większą liczbą obserwujących.", "Sprawdzam źródła obu informacji i szukam niezależnego potwierdzenia.", "Uznaję, że prawdy nie da się ustalić."], "c": 2, "area": "ZDECYDUJ"}, {"q": "Masz informację, która może być ważna dla innych, ale nie masz pewności, czy jest prawdziwa. Wybierz właściwą kolejność:", "a": ["PRZEKAŻ → SPRAWDŹ → OCEŃ → ZDECYDUJ → ZATRZYMAJ", "ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ", "SPRAWDŹ → ZATRZYMAJ → ZDECYDUJ → OCEŃ → PRZEKAŻ", "ZDECYDUJ → OCEŃ → SPRAWDŹ → ZATRZYMAJ → PRZEKAŻ"], "c": 1, "area": "PRZEKAŻ"}],post:[{"q": "Na grupie pojawia się: <b>„UWAGA! Ewakuacja szkoły jutro o 8:00. Nauczyciele nic nie mówią, ale ktoś dostał wiadomość od znajomego z urzędu.”</b><br><br>Co robisz najpierw?", "a": ["Udostępniam informację rodzicom.", "Sprawdzam oficjalny komunikat szkoły/służb lub właściwej instytucji.", "Pytam kolegów, czy też coś wiedzą.", "Przyjmuję informację jako prawdziwą."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "W internecie pojawia się informacja: <b>„Awaria systemu spowoduje dziś problemy z funkcjonowaniem miasta”.</b><br><br>Które źródło będzie dla Ciebie najważniejsze?", "a": ["TikTok.", "Komentarze mieszkańców.", "Oficjalny komunikat odpowiedniej instytucji.", "Popularny lokalny profil."], "c": 2, "area": "SPRAWDŹ"}, {"q": "Widzisz zdjęcie przedstawiające zalaną ulicę z podpisem: <b>„Tak wygląda Poręba dzisiaj”.</b><br><br>Nie wiadomo, kiedy i gdzie zdjęcie wykonano. Co robisz?", "a": ["Zakładam, że jest aktualne.", "Sprawdzam datę, miejsce i źródło zdjęcia.", "Patrzę na liczbę polubień.", "Udostępniam z pytajnikiem."], "c": 1, "area": "OCEŃ"}, {"q": "Post mówi: <b>„MEDIA TEGO NIE POKAŻĄ! TYLKO MY MÓWIMY PRAWDĘ! UDOSTĘPNIJ, ZANIM USUNĄ!”</b><br><br>Nie podano źródeł. Co robisz?", "a": ["Traktuję to jako dowód, że informacja jest prawdziwa.", "Zwracam uwagę na emocjonalny język i brak weryfikowalnego źródła.", "Udostępniam znajomym.", "Uznaję, że skoro ktoś tak mocno ostrzega, musi wiedzieć więcej."], "c": 1, "area": "ZDECYDUJ"}, {"q": "Pojawia się profil: <b>„URZĄD MIASTA – PILNE INFORMACJE”</b>. Ma herb miasta i wiele podobnych postów. Co sprawdzasz?", "a": ["Liczbę obserwujących.", "Liczbę komentarzy.", "Czy profil i komunikat są powiązane z oficjalnym kanałem urzędu.", "Czy znajomi go obserwują."], "c": 2, "area": "PRZEKAŻ"}, {"q": "Oglądasz film, na którym znana osoba wypowiada bardzo kontrowersyjne słowa. Film wygląda realistycznie. Co robisz?", "a": ["Uznaję go za prawdziwy.", "Sprawdzam źródło filmu i szukam niezależnego potwierdzenia.", "Udostępniam go, zanim zostanie usunięty.", "Zakładam, że każdy film może być prawdziwy."], "c": 1, "area": "ZATRZYMAJ"}, {"q": "Podczas kryzysu masz pięć sprzecznych komunikatów. Znajomi naciskają: <b>„Szybko! Musimy wiedzieć, co się dzieje!”</b> Co robisz?", "a": ["Wybieram najbardziej dramatyczną wersję.", "Sprawdzam aktualne informacje ze źródeł oficjalnych i wiarygodnych.", "Wybieram informację z największą liczbą udostępnień.", "Przekazuję wszystkie informacje dalej."], "c": 1, "area": "SPRAWDŹ"}, {"q": "Znajomy pisze: <b>„Mój kolega pracuje w urzędzie i mówi, że…”</b>, ale nie podaje szczegółów. Co robisz?", "a": ["Traktuję ją jak informację oficjalną.", "Przekazuję dalej.", "Traktuję ją jako niepotwierdzoną i próbuję znaleźć niezależne potwierdzenie.", "Uznaję ją za prawdziwą, bo znajomy zna pracownika urzędu."], "c": 2, "area": "OCEŃ"}, {"q": "Film dotyczący kryzysu ma milion wyświetleń. Oficjalny komunikat instytucji ma 500 wyświetleń. Który fakt jest najważniejszy przy ocenie wiarygodności?", "a": ["Liczba wyświetleń.", "Liczba komentarzy.", "Źródło, możliwość jego sprawdzenia i zgodność z innymi wiarygodnymi informacjami.", "Popularność autora."], "c": 2, "area": "ZDECYDUJ"}, {"q": "Uzupełnij model działania. Wybierz właściwą kolejność:", "a": ["OCEŃ → ZATRZYMAJ → SPRAWDŹ → PRZEKAŻ → ZDECYDUJ", "ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ", "SPRAWDŹ → OCEŃ → ZATRZYMAJ → ZDECYDUJ → PRZEKAŻ", "ZDECYDUJ → SPRAWDŹ → OCEŃ → PRZEKAŻ → ZATRZYMAJ"], "c": 1, "area": "PRZEKAŻ"}]}
 };
 const STORAGE='jura72h_diag_master_v2';
-let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='';
+let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='',testStartData='';
+const APP_VERSION='3.0.0';
+const UNIVERSAL_STATUS_KEY='jura72h_universal_status';
+const UNIVERSAL_POST_RETURN='https://jurajskiartefakt-creator.github.io/-jura-info-72h/';
 const MANAGER_TOKEN_KEY='jura72h_manager_token';
 function $(id){return document.getElementById(id)}
 function hideAll(){['home','modeSelect','meta','quiz','result','managerLogin','panel','fullResults'].forEach(x=>$(x).classList.add('hidden'))}
@@ -71,24 +78,51 @@ async function preparePOST(){
   try{
     const result=await readPostStatus(pid);
     btn.textContent='POST — po projekcie';btn.disabled=false;
-    if(result.pre&&result.postUnlocked&&!result.postDone){mode='POST';openMetaForMode();return}
-    if(!result.pre){alert('Nie znaleziono wykonanego PRE dla tego loginu. Wpisz dokładnie ten sam login, którego użyto podczas PRE.');return}
-    if(result.postDone){alert('POST dla tego loginu został już wykonany.');return}
+    if(result&&result.ok&&result.pre&&result.postUnlocked&&!result.postDone){mode='POST';openMetaForMode();return}
+    if(result&&result.ok&&!result.pre){alert('Nie znaleziono wykonanego PRE dla tego loginu. Wpisz dokładnie ten sam login, którego użyto podczas PRE.');return}
+    if(result&&result.postDone){alert('POST dla tego loginu został już wykonany.');return}
     alert('POST nie został jeszcze odblokowany przez prowadzącego.');
   }catch(e){
-    btn.textContent='POST — po projekcie';btn.disabled=false;
-    alert('Nie udało się odczytać statusu POST z bazy centralnej. Spróbuj ponownie.');
+    btn.textContent='POST — sprawdź dostęp';btn.disabled=false;
+    $('postHintMode').innerHTML='<span class="small">Nie udało się sprawdzić statusu w tej przeglądarce.</span><button class="ghost" style="margin-top:8px" onclick="openUniversalPostCheck()">Sprawdź dostęp do POST w trybie uniwersalnym</button>';
+  }
+}
+function openUniversalPostCheck(){
+  if(!pid){pid=$('pidMode').value.trim()}
+  if(!pid){alert('Wpisz login uczestnika.');return}
+  sessionStorage.setItem(UNIVERSAL_STATUS_KEY,JSON.stringify({login:pid,school:school,mode:'POST'}));
+  const url=CENTRAL_ENDPOINT+'?action=statusPage&login='+encodeURIComponent(pid);
+  window.location.href=url;
+}
+function handleUniversalReturn(){
+  const params=new URLSearchParams(location.search),st=params.get('juraStatus');
+  if(!st)return;
+  let saved={};try{saved=JSON.parse(sessionStorage.getItem(UNIVERSAL_STATUS_KEY)||'{}')}catch(e){}
+  if(saved.login){pid=saved.login;school=saved.school||school;mode='POST';}
+  sessionStorage.removeItem(UNIVERSAL_STATUS_KEY);
+  try{history.replaceState({},document.title,location.pathname)}catch(e){}
+  if(st==='unlocked'&&pid&&school){
+    $('schoolBadgeMode').textContent=DATA[school].badge;
+    $('pidMode').value=pid;
+    $('postHintMode').textContent='✓ POST jest odblokowany. Możesz rozpocząć badanie.';
+    openMetaForMode();
+  }else if(st==='locked'){
+    $('schoolBadgeMode').textContent=DATA[school].badge;$('pidMode').value=pid;hideAll();$('modeSelect').classList.remove('hidden');
+    $('postHintMode').textContent='POST nie jest jeszcze odblokowany przez prowadzącego.';
+  }else if(st==='done'){
+    $('schoolBadgeMode').textContent=DATA[school].badge;$('pidMode').value=pid;hideAll();$('modeSelect').classList.remove('hidden');
+    $('postHintMode').textContent='POST dla tego kodu został już wykonany.';
   }
 }
 function openMetaForMode(){readMeta();$('schoolBadge').textContent=DATA[school].badge;$('metaModeBadge').textContent=mode;$('startTestBtn').textContent=mode==='PRE'?'Rozpocznij PRE':'Rozpocznij POST';hideAll();$('meta').classList.remove('hidden')}
-function startPreparedTest(){if(!pid){alert('Brak loginu uczestnika.');return}readMeta();qs=DATA[school][mode==='PRE'?'pre':'post'];i=0;answers=[];scoreValue=0;hideAll();$('schoolQ').textContent=DATA[school].badge;$('mode').textContent=mode;$('quiz').classList.remove('hidden');render()}
+function startPreparedTest(){if(!pid){alert('Brak loginu uczestnika.');return}readMeta();qs=DATA[school][mode==='PRE'?'pre':'post'];i=0;answers=[];scoreValue=0;testStartData=new Date().toISOString();hideAll();$('schoolQ').textContent=DATA[school].badge;$('mode').textContent=mode;$('quiz').classList.remove('hidden');render()}
 function backToModeSelect(){$('pidMode').value=pid||'';hideAll();$('modeSelect').classList.remove('hidden')}
 function begin(m){if(m==='POST')preparePOST();else preparePRE()}
 function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
-function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({area:q.area,selected:n,correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
+function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({q:i+1,qid:school+'_'+mode+'_Q'+(i+1),area:q.area,selected:n,selectedText:String(q.a[n]??''),correctAnswer:q.c,correctText:String(q.a[q.c]??''),correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
 function makeJsonpUrl(action,params,cb){
-  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=2.8-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
+  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=3.0-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
   Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));
   return CENTRAL_ENDPOINT+'?'+q.join('&');
 }
@@ -141,7 +175,7 @@ async function saveViaFallback(record){
   try{
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),7000);
-    await fetch(CENTRAL_ENDPOINT+"?_v=2.9-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload,signal:controller.signal});
+    await fetch(CENTRAL_ENDPOINT+"?_v=3.0-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload,signal:controller.signal});
     clearTimeout(timer);return true;
   }catch(e){}
   return false;
@@ -152,35 +186,54 @@ async function verifySaved(record){
     return record.tryb==="POST"?!!st.postDone:!!st.pre;
   }catch(e){return false}
 }
-async function finish(){
-  const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta,obszary:answers,typSzkoly:school};
-  let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));
-  hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);
-  $('saveInfo').className='status';$('saveInfo').textContent='Zapisywanie wyniku w bazie centralnej…';
+async function submitUniversalSave(record){
+  const form=$('universalSaveForm');
+  const input=$('universalSaveData');
+  if(!form||!input) return false;
+  input.value=JSON.stringify({action:'save',record:record});
+  try{form.submit();return true}catch(e){return false}
+}
+function queueRecord(record){
+  const key='jura72h_pending_v3';
+  let q=[];try{q=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+  q=q.filter(x=>!(x.id===record.id&&x.tryb===record.tryb));q.push(record);
+  localStorage.setItem(key,JSON.stringify(q));
+}
+async function tryJsonpConfirmation(record){
   try{
-    const r=await saveViaJsonp(record,12000);
-    if(r&&r.ok&&r.zapisano){
-      $('saveInfo').textContent='✓ Wynik zapisany i potwierdzony w bazie centralnej.';
-      return;
-    }
-    if(await verifySaved(record)){
-      $('saveInfo').textContent='✓ Wynik jest zapisany i potwierdzony w bazie centralnej.';
-      return;
-    }
-  }catch(e){}
-  const fallback=await saveViaFallback(record);
-  if(fallback){
-    $('saveInfo').className='status';
-    $('saveInfo').textContent='✓ Wynik wysłany do bazy centralnej. Potwierdzenie może pojawić się za chwilę.';
+    const st=await jsonpAsync('status',{login:record.id},5000);
+    return record.tryb==='POST'?!!st.postDone:!!st.pre;
+  }catch(e){return false}
+}
+async function finish(){
+  const endData=new Date().toISOString();
+  const startMs=Date.parse(testStartData||endData),endMs=Date.parse(endData);
+  const duration=(Number.isFinite(startMs)&&Number.isFinite(endMs)&&endMs>=startMs)?Math.round((endMs-startMs)/1000):null;
+  const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:endData,startData:testStartData||endData,czasTrwaniaSec:duration,wersjaBadania:APP_VERSION,meta,obszary:answers,typSzkoly:school};
+  let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all=all.filter(x=>!(x.id===record.id&&x.tryb===record.tryb));all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));
+  hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);
+  $('saveInfo').className='status';$('saveInfo').textContent='Wysyłanie wyniku do bazy centralnej…';
+  queueRecord(record);
+  const sent=submitUniversalSave(record);
+  if(sent){
+    $('saveInfo').textContent='✓ Wynik wysłany do bazy centralnej. Możesz bezpiecznie przejść dalej.';
     setTimeout(async()=>{
-      if(await verifySaved(record)){$('saveInfo').textContent='✓ Wynik zapisany i potwierdzony w bazie centralnej.';$('saveInfo').className='status';}
-    },1200);
+      if(await tryJsonpConfirmation(record)){
+        $('saveInfo').textContent='✓ Wynik zapisany i potwierdzony w bazie centralnej.';
+        $('saveInfo').className='status';
+        removePendingRecord(record);
+      }
+    },1800);
   }else{
     $('saveInfo').className='status warn';
-    $('saveInfo').textContent='⚠ Wynik zapisany lokalnie. Nie udało się teraz połączyć z bazą centralną — spróbuj ponownie.';
+    $('saveInfo').textContent='⚠ Nie udało się wysłać wyniku. Został zachowany lokalnie.';
   }
+  $('resultNext').innerHTML=mode==='PRE'?'<div class="status info"><b>PRE zakończony.</b><br>Po zajęciach prowadzący może odblokować POST dla tego samego kodu.</div>':'<div class="status info"><b>POST zakończony.</b><br>Badanie dla tego kodu jest zakończone.</div>';
 }
-
+function removePendingRecord(record){
+  const key='jura72h_pending_v3';let q=[];try{q=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+  q=q.filter(x=>!(x.id===record.id&&x.tryb===record.tryb));localStorage.setItem(key,JSON.stringify(q));
+}
 function interpret(s){if(s<=3)return'Wynik wskazuje na potrzebę intensywnego rozwijania kompetencji w zakresie krytycznej analizy informacji.';if(s<=5)return'Widoczne są podstawowe kompetencje, ale część sytuacji wymaga dodatkowego ćwiczenia.';if(s<=7)return'Kompetencje są częściowo rozwinięte; warto wzmacniać samodzielne sprawdzanie źródeł i ocenę wiarygodności.';if(s<=9)return'Wynik wskazuje na dobre opanowanie większości badanych zachowań informacyjnych.';return'Wynik wskazuje na bardzo dobre opanowanie badanych zachowań informacyjnych.'}
 function newTest(){hideAll();$('home').classList.remove('hidden')}
 function goHome(){hideAll();$('home').classList.remove('hidden')}
@@ -227,7 +280,7 @@ function participantGroups(rows){
   rows.forEach(r=>{const id=String(r.ID||'').trim();if(!id)return;if(!g[id])g[id]={id,rows:[]};g[id].rows.push(r)});
   return Object.values(g).map(g=>{
     const pre=g.rows.find(x=>x.TRYB==='PRE'),post=g.rows.find(x=>x.TRYB==='POST');
-    return {id:g.id,pre,post,school:(post||pre||{}).TYP_SZKOŁY||'',klass:(post||pre||{}).KLASA||''};
+    return {id:g.id,pre,post,school:(post||pre||{}).TYP_SZKOŁY||'',klass:(post||pre||{}).KLASA||'',age:(post||pre||{}).WIEK||''};
   }).sort((a,b)=>a.id.localeCompare(b.id));
 }
 function refreshManager(){
@@ -240,7 +293,7 @@ function refreshManager(){
     $('managerRows').innerHTML=groups.map(g=>{
       const pv=g.pre?Number(g.pre.WYNIK):null, qv=g.post?Number(g.post.WYNIK):null, delta=(pv!==null&&qv!==null)?qv-pv:null;
       const ds=delta===null?'—':(delta>0?'+'+delta:String(delta));
-      return '<tr><td><b>'+escapeHtml(g.id)+'</b></td><td>'+escapeHtml(g.school)+'</td><td>'+(g.pre?escapeHtml(String(g.pre.WYNIK))+'/'+escapeHtml(String(g.pre.MAKS||10)):'—')+'</td><td>'+(g.post?escapeHtml(String(g.post.WYNIK))+'/'+escapeHtml(String(g.post.MAKS||10)):'—')+'</td><td><b>'+escapeHtml(ds)+'</b></td><td>'+escapeHtml(g.klass)+'</td><td><button style="margin:0;padding:8px 10px;font-size:12px" data-login="'+escapeHtml(g.id)+'" onclick="showFullResults(this.dataset.login)">Pełne wyniki</button></td></tr>';
+      return '<tr><td><b>'+escapeHtml(g.id)+'</b></td><td>'+escapeHtml(g.school)+'</td><td>'+escapeHtml(g.age)+'</td><td>'+escapeHtml(g.klass)+'</td><td>'+(g.pre?escapeHtml(String(g.pre.WYNIK))+'/'+escapeHtml(String(g.pre.MAKS||10)):'—')+'</td><td>'+(g.post?escapeHtml(String(g.post.WYNIK))+'/'+escapeHtml(String(g.post.MAKS||10)):'—')+'</td><td><b>'+escapeHtml(ds)+'</b></td><td>'+escapeHtml(g.pre?formatDate(g.pre.DATA):'—')+'</td><td>'+escapeHtml(g.post?formatDate(g.post.DATA):'—')+'</td><td><button style="margin:0;padding:8px 10px;font-size:12px" data-login="'+escapeHtml(g.id)+'" onclick="showFullResults(this.dataset.login)">Pełne wyniki</button></td></tr>';
     }).join('');
     window.juraManagerRows=rows;
   });
@@ -252,13 +305,13 @@ function showFullResults(login){
   const pre=rows.find(r=>r.TRYB==='PRE'),post=rows.find(r=>r.TRYB==='POST'),pv=pre?Number(pre.WYNIK):null,qv=post?Number(post.WYNIK):null,delta=(pv!==null&&qv!==null)?qv-pv:null;
   $('fullLogin').textContent=login;
   $('fullSchool').textContent=(post||pre||{}).TYP_SZKOŁY||'';
-  $('fullSummary').innerHTML='<p><b>PRE:</b> '+(pre?pre.WYNIK+'/'+(pre.MAKS||10):'brak')+' · <b>POST:</b> '+(post?post.WYNIK+'/'+(post.MAKS||10):'brak')+' · <b>Zmiana:</b> '+(delta===null?'—':(delta>0?'+'+delta:String(delta)))+'</p>'+(pre?'<p><b>Obszary PRE:</b> '+escapeHtml(areaSummary(pre)||'brak zapisanych danych')+'</p>':'')+(post?'<p><b>Obszary POST:</b> '+escapeHtml(areaSummary(post)||'brak zapisanych danych')+'</p>':'')+'<p class="small">Obszary są prezentowane jako liczba poprawnych odpowiedzi / liczba pytań.</p>';
+  $('fullSummary').innerHTML='<p><b>PRE:</b> '+(pre?pre.WYNIK+'/'+(pre.MAKS||10):'brak')+' · <b>POST:</b> '+(post?post.WYNIK+'/'+(post.MAKS||10):'brak')+' · <b>Zmiana:</b> '+(delta===null?'—':(delta>0?'+'+delta:String(delta)))+'</p>'+(pre?'<p><b>Data/czas PRE:</b> '+escapeHtml(formatDate(pre.DATA))+'</p>':'')+(post?'<p><b>Data/czas POST:</b> '+escapeHtml(formatDate(post.DATA))+'</p>':'')+(pre?'<p><b>Obszary PRE:</b> '+escapeHtml(areaSummary(pre)||'brak zapisanych danych')+'</p>':'')+(post?'<p><b>Obszary POST:</b> '+escapeHtml(areaSummary(post)||'brak zapisanych danych')+'</p>':'')+'<p class="small">Obszary są prezentowane jako liczba poprawnych odpowiedzi / liczba pytań. Surowe odpowiedzi pozostają zapisane w bazie.</p>';
   $('fullDetails').innerHTML=rows.sort((a,b)=>String(a.TRYB).localeCompare(String(b.TRYB))).map(r=>{
     const m=[];
     if(r.KLASA)m.push('Klasa: '+escapeHtml(r.KLASA));
     if(r.PŁEĆ)m.push('Płeć: '+escapeHtml(r.PŁEĆ));
-    if(r.WIEK)m.push('Wiek: '+escapeHtml(r.WIEK));
-    return '<div class="card" style="box-shadow:none;border:1px solid #e5e7eb;margin:12px 0"><h3>'+escapeHtml(r.TRYB)+' · '+escapeHtml(String(r.WYNIK||''))+'/'+escapeHtml(String(r.MAKS||10))+'</h3><p class="small">'+m.join(' · ')+'</p><p><b>Obszary:</b> '+escapeHtml(areaSummary(r)||'brak zapisanych danych')+'</p></div>';
+    if(r.WIEK)m.push('Wiek: '+escapeHtml(r.WIEK)); if(r.INTERNET)m.push('Internet: '+escapeHtml(r.INTERNET)); if(r.ŹRÓDŁA)m.push('Źródła: '+escapeHtml(r.ŹRÓDŁA)); if(r.EDUKACJA)m.push('Edukacja: '+escapeHtml(r.EDUKACJA)); if(r.SPRAWDZANIE)m.push('Sprawdzanie: '+escapeHtml(r.SPRAWDZANIE)); if(r.UDOSTĘPNIENIE)m.push('Udostępnianie: '+escapeHtml(r.UDOSTĘPNIENIE));
+    let answers=[];try{answers=JSON.parse(r.OBSZARY||'[]')}catch(e){}; const rowsHtml=Array.isArray(answers)?answers.map((a,n)=>'<tr><td>'+(a.q||n+1)+'</td><td>'+escapeHtml(a.area||'')+'</td><td>'+escapeHtml(a.selectedText||String(Number(a.selected??-1)+1))+'</td><td>'+(a.correct?'TAK':'NIE')+'</td></tr>').join(''):''; return '<div class="card" style="box-shadow:none;border:1px solid #e5e7eb;margin:12px 0"><h3>'+escapeHtml(r.TRYB)+' · '+escapeHtml(String(r.WYNIK||''))+'/'+escapeHtml(String(r.MAKS||10))+'</h3><p class="small">'+m.join(' · ')+' · Data/czas: '+escapeHtml(formatDate(r.DATA))+'</p><p><b>Obszary:</b> '+escapeHtml(areaSummary(r)||'brak zapisanych danych')+'</p><div class="scroll"><table><tr><th>Pyt.</th><th>Obszar</th><th>Wybrana odpowiedź</th><th>Poprawna</th></tr>'+rowsHtml+'</table></div></div>';
   }).join('');
   hideAll();$('fullResults').classList.remove('hidden');
 }
@@ -266,6 +319,6 @@ function backToPanel(){hideAll();$('panel').classList.remove('hidden');refreshMa
 function unlockPost(){const login=$('unlockLogin').value.trim();if(!login){alert('Wpisz login uczestnika.');return}jsonp('unlockPost',{token:managerToken,login:login},r=>{const box=$('managerInfo');box.className='status';box.classList.remove('hidden');box.textContent=r&&r.ok?'✓ POST odblokowany dla: '+login:'Nie udało się odblokować: '+((r&&r.error)||'błąd');if(r&&r.ok)refreshManager()})}
 function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);goHome()}
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-(function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||''})();
+(function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';handleUniversalReturn();})();
 if("serviceWorker" in navigator){ navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{}); }
 </script></body></html>
