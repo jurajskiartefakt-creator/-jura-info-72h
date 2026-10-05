@@ -2,14 +2,14 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.1-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.2</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.3-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.3</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
 <section class="hero"><span class="brand">JURA INFO 72H</span><h1>Odporność informacyjna</h1><div class="lead">Badanie kompetencji informacyjnych młodzieży w sytuacjach wymagających szybkiej i odpowiedzialnej decyzji.</div></section>
 <section id="home" class="card"><h2>Wybierz typ szkoły</h2><p class="small">Wybór określa zestaw sytuacji badawczych. Dane trafiają do wspólnego standardu badania.</p><div class="grid"><button class="choice" onclick="chooseSchool('SP')"><strong>Szkoła podstawowa</strong><span>Klasy 4–8 · scenariusze dostosowane do wieku</span></button><button class="choice" onclick="chooseSchool('PP')"><strong>Szkoła ponadpodstawowa</strong><span>Liceum · technikum · szkoła branżowa</span></button></div><button class="ghost" onclick="openManagerLogin()">Panel MANAGERA</button></section>
-<section id="modeSelect" class="card hidden"><div><span id="schoolBadgeMode" class="badge"></span><span class="badge">anonimowe badanie</span></div><h2>Wybierz etap badania</h2><p class="small">Wpisz login uczestnika. PRE wykonujesz przed projektem. POST będzie dostępny dopiero po odblokowaniu przez prowadzącego.</p><label for="pidMode">Login uczestnika</label><input id="pidMode" type="text" maxlength="30" placeholder="np. SP8-01" autocomplete="off"><div class="grid"><button onclick="preparePRE()">PRE — przed projektem</button><button id="postModeBtn" class="alt" onclick="preparePOST()">POST — po projekcie</button></div><div id="postHintMode" class="small" style="margin-top:8px">POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.</div><button class="ghost" onclick="goHome()">Wróć</button></section>
-<section id="meta" class="card hidden"><div><span id="schoolBadge" class="badge"></span><span id="metaModeBadge" class="badge"></span></div><h2>Dane badania</h2><p class="small">Dane poniżej są częścią badania i pojawiają się dopiero po wyborze etapu. Nie wpisuj imienia ani nazwiska.</p><div class="grid"><div><label for="age">Wiek</label><input id="age" type="number" min="9" max="25"></div><div><label for="class">Klasa</label><select id="class"></select></div></div><label for="gender">Płeć</label><select id="gender"><option value="">Wybierz lub pomiń</option><option>dziewczyna</option><option>chłopak</option><option>inna / nie chcę określać</option></select>
+<section id="modeSelect" class="card hidden"><div><span id="schoolBadgeMode" class="badge"></span><span class="badge">anonimowe badanie</span></div><h2>Wybierz etap badania</h2><p class="small">Wpisz login uczestnika. PRE wykonujesz przed projektem. POST będzie dostępny dopiero po odblokowaniu przez prowadzącego.</p><label for="pidMode">Login uczestnika</label><input id="pidMode" type="text" maxlength="30" placeholder="np. SP8-01" autocomplete="off"><div class="grid"><button id="preModeBtn" onclick="preparePRE()">PRE — przed projektem</button><button id="postModeBtn" class="alt" onclick="preparePOST()">POST — po projekcie</button></div><div id="postHintMode" class="small" style="margin-top:8px">POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.</div><button class="ghost" onclick="goHome()">Wróć</button></section>
+<section id="meta" class="card hidden"><div><span id="schoolBadge" class="badge"></span><span id="metaModeBadge" class="badge"></span></div><h2>Dane badania</h2><p class="small">Dane poniżej są częścią badania i pojawiają się dopiero po wyborze etapu. Nie wpisuj imienia ani nazwiska.</p><div id="ppTypeWrap" class="hidden"><label for="ppType">Typ szkoły ponadpodstawowej</label><select id="ppType"><option value="">Wybierz</option><option value="LO">Liceum ogólnokształcące</option><option value="TECH">Technikum</option><option value="BRANZ">Szkoła branżowa</option></select></div><div class="grid"><div><label for="age">Wiek</label><input id="age" type="number" min="9" max="25"></div><div><label for="class">Klasa</label><select id="class"></select></div></div><label for="gender">Płeć</label><select id="gender"><option value="">Wybierz lub pomiń</option><option>dziewczyna</option><option>chłopak</option><option>inna / nie chcę określać</option></select>
 <label for="net">Jak często korzystasz z internetu?</label><select id="net"><option value="">Wybierz</option><option>rzadziej niż codziennie</option><option>codziennie do 2 godzin</option><option>codziennie 2–4 godziny</option><option>codziennie ponad 4 godziny</option></select>
 <label>Z jakich źródeł najczęściej czerpiesz informacje? <span class="small">(możesz wybrać kilka)</span></label><div id="sources"></div>
 <label for="education">Czy miałeś/aś wcześniej zajęcia o fake newsach, dezinformacji, bezpieczeństwie informacji lub AI?</label><select id="education"><option value="">Wybierz</option><option>tak</option><option>nie</option><option>nie pamiętam</option></select>
@@ -32,7 +32,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.2 — NEUTRALNE PYTANIA + MANAGER FIX + UNIVERSAL MOBILE</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.3 — BLOKADA POWTÓRNEGO PRE + PREFILL POST + KLASY PP</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -50,15 +50,74 @@ const DATA={
 };
 const STORAGE='jura72h_diag_master_v2';
 let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='',testStartData='';
-const APP_VERSION='3.2.0';
+const APP_VERSION='3.3.0';
 const UNIVERSAL_STATUS_KEY='jura72h_universal_status';
 const UNIVERSAL_POST_RETURN='https://jurajskiartefakt-creator.github.io/-jura-info-72h/';
 const MANAGER_TOKEN_KEY='jura72h_manager_token';
 function $(id){return document.getElementById(id)}
 function hideAll(){['home','modeSelect','meta','quiz','result','managerLogin','panel','fullResults'].forEach(x=>$(x).classList.add('hidden'))}
-function chooseSchool(t){school=t;$('schoolBadgeMode').textContent=DATA[t].badge;const sel=$('class');sel.innerHTML='<option value="">Wybierz</option>'+DATA[t].classes.map(c=>'<option>'+c+'</option>').join('');const src=['social','youtube','news','official','friends','other'];const lab=['media społecznościowe','YouTube / TikTok','portale informacyjne','oficjalne strony instytucji','rodzina / znajomi','inne'];$('sources').innerHTML=src.map((s,n)=>'<label class="opt"><input type="checkbox" name="source" value="'+s+'">'+lab[n]+'</label>').join('');$('pidMode').value='';$('postHintMode').textContent='POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.';$('postModeBtn').disabled=false;$('postModeBtn').style.opacity='1';hideAll();$('modeSelect').classList.remove('hidden')}
-function readMeta(){meta={wiek:$('age').value,klasa:$('class').value,plec:$('gender').value,internet:$('net').value,zrodla:[...document.querySelectorAll('input[name="source"]:checked')].map(x=>x.value),edukacja:$('education').value,sprawdzanie:$('checking').value,udostepnienie:$('mistake').value}}
-function preparePRE(){pid=$('pidMode').value.trim();if(!pid){alert('Wpisz login uczestnika.');return}mode='PRE';openMetaForMode()}
+function chooseSchool(t){
+  school=t;
+  $('schoolBadgeMode').textContent=DATA[t].badge;
+  $('pidMode').value='';
+  $('preModeBtn').disabled=false;$('preModeBtn').style.opacity='1';
+  $('postModeBtn').disabled=false;$('postModeBtn').style.opacity='1';
+  $('postHintMode').textContent='POST zostanie odblokowany przez prowadzącego po wykonaniu PRE.';
+  if(t==='PP'){
+    $('ppTypeWrap').classList.remove('hidden');
+    $('ppType').value='';
+    setPPClasses('');
+  }else{
+    $('ppTypeWrap').classList.add('hidden');
+    $('ppType').value='';
+    setClassOptions(DATA[t].classes);
+  }
+  const src=['social','youtube','news','official','friends','other'];
+  const lab=['media społecznościowe','YouTube / TikTok','portale informacyjne','oficjalne strony instytucji','rodzina / znajomi','inne'];
+  $('sources').innerHTML=src.map((s,n)=>'<label class="opt"><input type="checkbox" name="source" value="'+s+'">'+lab[n]+'</label>').join('');
+  hideAll();$('modeSelect').classList.remove('hidden');
+}
+function setClassOptions(classes){
+  const sel=$('class');
+  sel.innerHTML='<option value="">Wybierz</option>'+classes.map(c=>'<option>'+c+'</option>').join('');
+}
+function setPPClasses(type){
+  const classes=type==='LO'?['I','II','III','IV']:type==='TECH'?['I','II','III','IV','V']:type==='BRANZ'?['I','II','III']:[];
+  setClassOptions(classes);
+}
+function readMeta(){
+  meta={
+    wiek:$('age').value,klasa:$('class').value,plec:$('gender').value,
+    internet:$('net').value,zrodla:[...document.querySelectorAll('input[name="source"]:checked')].map(x=>x.value),
+    edukacja:$('education').value,sprawdzanie:$('checking').value,udostepnienie:$('mistake').value,
+    typPP:school==='PP'?($('ppType').value||''):''
+  };
+}
+async function preparePRE(){
+  pid=$('pidMode').value.trim();
+  if(!pid){alert('Wpisz login uczestnika.');return}
+  const btn=$('preModeBtn');btn.disabled=true;btn.textContent='Sprawdzanie loginu…';
+  try{
+    const result=await readPostStatus(pid);
+    if(result&&result.ok&&result.pre&&!result.postDone){
+      btn.textContent='PRE — przed projektem';btn.disabled=false;
+      $('postHintMode').innerHTML=result.postUnlocked
+        ? '<b>PRE już wykonany.</b><br>POST jest odblokowany — wybierz POST.'
+        : '<b>Ten login ma już wykonany PRE.</b><br>Nie można wykonać kolejnego PRE. Prowadzący musi najpierw odblokować POST.';
+      return;
+    }
+    if(result&&result.ok&&result.postDone){
+      btn.textContent='PRE — przed projektem';btn.disabled=false;
+      alert('Ten login ma już wykonane PRE i POST. Nie można rozpocząć kolejnego badania tym loginem.');
+      return;
+    }
+    btn.textContent='PRE — przed projektem';btn.disabled=false;
+    mode='PRE';openMetaForMode();
+  }catch(e){
+    btn.textContent='PRE — przed projektem';btn.disabled=false;
+    mode='PRE';openMetaForMode();
+  }
+}
 async function readPostStatus(login){
   let last=null;
   for(let attempt=1;attempt<=4;attempt++){
@@ -78,7 +137,7 @@ async function preparePOST(){
   try{
     const result=await readPostStatus(pid);
     btn.textContent='POST — po projekcie';btn.disabled=false;
-    if(result&&result.ok&&result.pre&&result.postUnlocked&&!result.postDone){mode='POST';openMetaForMode();return}
+    if(result&&result.ok&&result.pre&&result.postUnlocked&&!result.postDone){mode='POST';prefillPostMeta(result.preMeta||null);openMetaForMode();return}
     if(result&&result.ok&&!result.pre){alert('Nie znaleziono wykonanego PRE dla tego loginu. Wpisz dokładnie ten sam login, którego użyto podczas PRE.');return}
     if(result&&result.postDone){alert('POST dla tego loginu został już wykonany.');return}
     alert('POST nie został jeszcze odblokowany przez prowadzącego.');
@@ -105,6 +164,7 @@ function handleUniversalReturn(){
     $('schoolBadgeMode').textContent=DATA[school].badge;
     $('pidMode').value=pid;
     $('postHintMode').textContent='✓ POST jest odblokowany. Możesz rozpocząć badanie.';
+    prefillPostMeta(null);
     openMetaForMode();
   }else if(st==='locked'){
     $('schoolBadgeMode').textContent=DATA[school].badge;$('pidMode').value=pid;hideAll();$('modeSelect').classList.remove('hidden');
@@ -114,6 +174,29 @@ function handleUniversalReturn(){
     $('postHintMode').textContent='POST dla tego kodu został już wykonany.';
   }
 }
+function prefillPostMeta(serverMeta){
+  let m=serverMeta||null;
+  if(!m){
+    try{
+      const all=JSON.parse(localStorage.getItem(STORAGE)||'[]');
+      const found=all.find(x=>x.id===pid&&x.tryb==='PRE');
+      if(found&&found.meta)m=found.meta;
+    }catch(e){}
+  }
+  if(!m)return;
+  if(m.wiek!=null)$('age').value=m.wiek;
+  if(m.typPP&&school==='PP'){
+    $('ppType').value=m.typPP;
+    setPPClasses(m.typPP);
+  }
+  if(m.klasa!=null)$('class').value=m.klasa;
+  if(m.plec!=null)$('gender').value=m.plec;
+  if(m.internet!=null)$('net').value=m.internet;
+  if(m.edukacja!=null)$('education').value=m.edukacja;
+  if(m.sprawdzanie!=null)$('checking').value=m.sprawdzanie;
+  if(m.udostepnienie!=null)$('mistake').value=m.udostepnienie;
+  document.querySelectorAll('input[name="source"]').forEach(x=>x.checked=Array.isArray(m.zrodla)&&m.zrodla.includes(x.value));
+}
 function openMetaForMode(){readMeta();$('schoolBadge').textContent=DATA[school].badge;$('metaModeBadge').textContent=mode;$('startTestBtn').textContent=mode==='PRE'?'Rozpocznij PRE':'Rozpocznij POST';hideAll();$('meta').classList.remove('hidden')}
 function startPreparedTest(){if(!pid){alert('Brak loginu uczestnika.');return}readMeta();qs=DATA[school][mode==='PRE'?'pre':'post'];i=0;answers=[];scoreValue=0;testStartData=new Date().toISOString();hideAll();$('schoolQ').textContent=DATA[school].badge;$('mode').textContent=mode;$('quiz').classList.remove('hidden');render()}
 function backToModeSelect(){$('pidMode').value=pid||'';hideAll();$('modeSelect').classList.remove('hidden')}
@@ -122,7 +205,7 @@ function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({q:i+1,qid:school+'_'+mode+'_Q'+(i+1),area:q.area,selected:n,selectedText:String(q.a[n]??''),correctAnswer:q.c,correctText:String(q.a[q.c]??''),correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
 function makeJsonpUrl(action,params,cb){
-  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=3.2-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
+  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=3.3-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
   Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));
   return CENTRAL_ENDPOINT+'?'+q.join('&');
 }
