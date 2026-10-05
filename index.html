@@ -2,7 +2,7 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.5-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.5</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.9-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.9</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
@@ -39,7 +39,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.8 — LOGOWANIE MANAGERA + POWRÓT AUTOMATYCZNY</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.9 — LOGOWANIE MANAGERA + POWRÓT AUTOMATYCZNY</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -57,7 +57,7 @@ const DATA={
 };
 const STORAGE='jura72h_diag_master_v2';
 let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='',testStartData='';
-const APP_VERSION='3.7.0';
+const APP_VERSION='3.9.0';
 const UNIVERSAL_STATUS_KEY='jura72h_universal_status';
 const UNIVERSAL_POST_RETURN='https://jurajskiartefakt-creator.github.io/-jura-info-72h/';
 const MANAGER_TOKEN_KEY='jura72h_manager_token';
@@ -334,16 +334,25 @@ function openManagerLogin(){
   $('managerLoginInfo').classList.add('hidden');
   if($('rememberManager')) $('rememberManager').checked=!!localStorage.getItem(MANAGER_TOKEN_KEY);
 }
-let managerLoginPopup=null;
-function setupManagerLoginBridge(){
-  if(window.__juraManagerBridgeReady) return;
-  window.__juraManagerBridgeReady=true;
-  window.addEventListener('message',function(ev){
-    const d=ev.data||{};
-    if(d.type!=='JURA_MANAGER_LOGIN') return;
-    if(d.ok && d.token){
-      const remember=!!d.remember;
-      managerToken=String(d.token);
+function managerLogin(){
+  const u=$('managerUser').value.trim()||'MANAGER';
+  const p=$('managerPass').value;
+  const remember=!!($('rememberManager')&&$('rememberManager').checked);
+  if(u.toUpperCase()!=='MANAGER'||!p){
+    $('managerLoginInfo').className='status warn';
+    $('managerLoginInfo').classList.remove('hidden');
+    $('managerLoginInfo').textContent='Podaj login i hasło.';
+    return;
+  }
+  $('managerLoginInfo').className='status';
+  $('managerLoginInfo').classList.remove('hidden');
+  $('managerLoginInfo').textContent='Logowanie do bazy centralnej…';
+  // v3.9: manager loguje się tym samym JSONP, którego używa panel do
+  // pobierania danych. Nie ma przekierowania do script.google.com,
+  // iframe, popupu ani tokenu w adresie URL.
+  jsonp('managerLogin',{user:u,password:p},r=>{
+    if(r&&r.ok&&r.token){
+      managerToken=String(r.token);
       if(remember){
         localStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
         localStorage.setItem('jura72h_manager_remember','1');
@@ -355,53 +364,14 @@ function setupManagerLoginBridge(){
       }
       $('managerLoginInfo').className='status';
       $('managerLoginInfo').classList.remove('hidden');
-      $('managerLoginInfo').textContent='✓ Zalogowano. Otwieram panel MANAGERA…';
-      try{if(managerLoginPopup&&!managerLoginPopup.closed) managerLoginPopup.close()}catch(e){}
-      setTimeout(loadManagerData,120);
+      $('managerLoginInfo').textContent='✓ Zalogowano. Pobieram wyniki…';
+      setTimeout(loadManagerData,50);
     }else{
       $('managerLoginInfo').className='status warn';
       $('managerLoginInfo').classList.remove('hidden');
-      $('managerLoginInfo').textContent=String(d.error||'Nieprawidłowy login lub hasło.');
-      try{if(managerLoginPopup&&!managerLoginPopup.closed) managerLoginPopup.close()}catch(e){}
+      $('managerLoginInfo').textContent=String((r&&r.error)||'Nie udało się zalogować do bazy centralnej.');
     }
   });
-}
-function managerLogin(){
-  const u=$('managerUser').value.trim()||'MANAGER';
-  const p=$('managerPass').value;
-  if(u.toUpperCase()!=='MANAGER'||!p){
-    $('managerLoginInfo').className='status warn';
-    $('managerLoginInfo').classList.remove('hidden');
-    $('managerLoginInfo').textContent='Podaj login i hasło.';
-    return;
-  }
-  setupManagerLoginBridge();
-  $('managerLoginInfo').className='status';
-  $('managerLoginInfo').classList.remove('hidden');
-  $('managerLoginInfo').textContent='Otwieram bezpieczne okno logowania…';
-
-  // v3.6: zwykły POST trafia do nowego okna otwartego bezpośrednio po kliknięciu.
-  // Dzięki temu nie korzystamy z iframe (Apps Script może blokować osadzanie).
-  managerLoginPopup=window.open('about:blank','juraManagerLoginPopup','width=520,height=700,resizable=yes,scrollbars=yes');
-  if(!managerLoginPopup){
-    $('managerLoginInfo').className='status warn';
-    $('managerLoginInfo').textContent='Przeglądarka zablokowała okno logowania. Zezwól na wyskakujące okna dla tej strony i spróbuj ponownie.';
-    return;
-  }
-  let form=document.getElementById('managerLoginFormUniversal');
-  if(form) form.remove();
-  form=document.createElement('form');
-  form.id='managerLoginFormUniversal';
-  form.method='POST';
-  form.action=CENTRAL_ENDPOINT;
-  form.target='juraManagerLoginPopup';
-  form.style.display='none';
-  [['action','managerLoginPage'],['user',u],['password',p],['remember',($('rememberManager')&&$('rememberManager').checked)?'1':'0']].forEach(([name,value])=>{
-    const input=document.createElement('input');
-    input.name=name;input.value=value;form.appendChild(input);
-  });
-  document.body.appendChild(form);
-  form.submit();
 }
 function loadManagerData(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
 function parseAreas(value){
@@ -477,30 +447,9 @@ function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 (function(){
   try{
-    const hash=String(location.hash||'');
-    const m=hash.match(/(?:^|&)managerToken=([^&]+)/);
-    const rememberParam=new URLSearchParams(location.search).get('managerRemember')==='1';
-    if(m){
-      managerToken=decodeURIComponent(m[1]);
-      const remember=rememberParam || (localStorage.getItem('jura72h_manager_remember')==='1');
-      if(remember){
-        localStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
-        localStorage.setItem('jura72h_manager_remember','1');
-        sessionStorage.removeItem(MANAGER_TOKEN_KEY);
-      }else{
-        sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
-      }
-      history.replaceState(null,document.title,location.pathname);
-      // Po powrocie z Apps Script token jest już poprawny — od razu otwieramy panel.
-      // Wcześniej token był zapisany, ale aplikacja pozostawała na ekranie głównym.
-      setTimeout(function(){
-        if(managerToken) loadManagerData();
-      }, 50);
-    }else{
-      managerToken=localStorage.getItem(MANAGER_TOKEN_KEY)||sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
-      // Zapamiętana sesja managera również powinna automatycznie otwierać panel.
-      if(managerToken) setTimeout(function(){ loadManagerData(); }, 50);
-    }
+    managerToken=localStorage.getItem(MANAGER_TOKEN_KEY)||sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
+    // Zapamiętana sesja managera: próbujemy od razu otworzyć panel.
+    if(managerToken) setTimeout(function(){ loadManagerData(); },50);
   }catch(e){
     managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
   }
