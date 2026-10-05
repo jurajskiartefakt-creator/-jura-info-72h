@@ -39,7 +39,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.4 — LOGOWANIE MANAGERA UNIVERSAL + ZAPAMIĘTANIE SESJI</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.6 — LOGOWANIE MANAGERA UNIVERSAL + ZAPAMIĘTANIE SESJI</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -334,17 +334,11 @@ function openManagerLogin(){
   $('managerLoginInfo').classList.add('hidden');
   if($('rememberManager')) $('rememberManager').checked=!!localStorage.getItem(MANAGER_TOKEN_KEY);
 }
-let managerLoginFrame=null;
+let managerLoginPopup=null;
 function setupManagerLoginBridge(){
-  if(managerLoginFrame)return managerLoginFrame;
-  managerLoginFrame=document.createElement('iframe');
-  managerLoginFrame.id='managerLoginFrame';
-  managerLoginFrame.name='juraManagerLoginFrame';
-  managerLoginFrame.title='Logowanie managera';
-  managerLoginFrame.style.display='none';
-  document.body.appendChild(managerLoginFrame);
+  if(window.__juraManagerBridgeReady) return;
+  window.__juraManagerBridgeReady=true;
   window.addEventListener('message',function(ev){
-    if(!managerLoginFrame || ev.source!==managerLoginFrame.contentWindow) return;
     const d=ev.data||{};
     if(d.type!=='JURA_MANAGER_LOGIN') return;
     if(d.ok && d.token){
@@ -362,15 +356,15 @@ function setupManagerLoginBridge(){
       $('managerLoginInfo').className='status';
       $('managerLoginInfo').classList.remove('hidden');
       $('managerLoginInfo').textContent='✓ Zalogowano. Otwieram panel MANAGERA…';
+      try{if(managerLoginPopup&&!managerLoginPopup.closed) managerLoginPopup.close()}catch(e){}
       setTimeout(loadManagerData,120);
     }else{
       $('managerLoginInfo').className='status warn';
       $('managerLoginInfo').classList.remove('hidden');
       $('managerLoginInfo').textContent=String(d.error||'Nieprawidłowy login lub hasło.');
+      try{if(managerLoginPopup&&!managerLoginPopup.closed) managerLoginPopup.close()}catch(e){}
     }
-    try{managerLoginFrame.src='about:blank'}catch(e){}
   });
-  return managerLoginFrame;
 }
 function managerLogin(){
   const u=$('managerUser').value.trim()||'MANAGER';
@@ -381,20 +375,26 @@ function managerLogin(){
     $('managerLoginInfo').textContent='Podaj login i hasło.';
     return;
   }
+  setupManagerLoginBridge();
   $('managerLoginInfo').className='status';
   $('managerLoginInfo').classList.remove('hidden');
-  $('managerLoginInfo').textContent='Logowanie…';
+  $('managerLoginInfo').textContent='Otwieram bezpieczne okno logowania…';
 
-  // v3.5: POST idzie do ukrytego iframe. Dzięki temu Apps Script nie przejmuje
-  // całego ekranu i Safari/Chrome mogą bezpiecznie wrócić do aplikacji GitHub.
-  const frame=setupManagerLoginBridge();
+  // v3.6: zwykły POST trafia do nowego okna otwartego bezpośrednio po kliknięciu.
+  // Dzięki temu nie korzystamy z iframe (Apps Script może blokować osadzanie).
+  managerLoginPopup=window.open('about:blank','juraManagerLoginPopup','width=520,height=700,resizable=yes,scrollbars=yes');
+  if(!managerLoginPopup){
+    $('managerLoginInfo').className='status warn';
+    $('managerLoginInfo').textContent='Przeglądarka zablokowała okno logowania. Zezwól na wyskakujące okna dla tej strony i spróbuj ponownie.';
+    return;
+  }
   let form=document.getElementById('managerLoginFormUniversal');
   if(form) form.remove();
   form=document.createElement('form');
   form.id='managerLoginFormUniversal';
   form.method='POST';
   form.action=CENTRAL_ENDPOINT;
-  form.target=frame.name;
+  form.target='juraManagerLoginPopup';
   form.style.display='none';
   [['action','managerLoginPage'],['user',u],['password',p],['remember',($('rememberManager')&&$('rememberManager').checked)?'1':'0']].forEach(([name,value])=>{
     const input=document.createElement('input');
