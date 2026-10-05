@@ -39,7 +39,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.7 — LOGOWANIE MANAGERA + POWRÓT AUTOMATYCZNY</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.8 — LOGOWANIE MANAGERA + POWRÓT AUTOMATYCZNY</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -491,8 +491,15 @@ function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;',
         sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
       }
       history.replaceState(null,document.title,location.pathname);
+      // Po powrocie z Apps Script token jest już poprawny — od razu otwieramy panel.
+      // Wcześniej token był zapisany, ale aplikacja pozostawała na ekranie głównym.
+      setTimeout(function(){
+        if(managerToken) loadManagerData();
+      }, 50);
     }else{
       managerToken=localStorage.getItem(MANAGER_TOKEN_KEY)||sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
+      // Zapamiętana sesja managera również powinna automatycznie otwierać panel.
+      if(managerToken) setTimeout(function(){ loadManagerData(); }, 50);
     }
   }catch(e){
     managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
