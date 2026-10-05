@@ -2,7 +2,7 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="MOBILE-POST-FIX-2.8-2026-10-03"><title>JURA INFO 72H – badanie diagnostyczne · v2.8</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="MOBILE-POST-FIX-2.9-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v2.9</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
@@ -32,7 +32,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 2.8 — SAFARI JSONP FIX</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 2.9 — SAVE JSONP FIX</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -126,47 +126,61 @@ function jsonpAsync(action,params,timeout){
     setTimeout(()=>finish({ok:false,error:'Timeout'}),timeout||8000);
   });
 }
-async function sendToCentral(record){
+function saveViaJsonp(record,timeout){
   const payload=JSON.stringify({action:"save",record:record});
-  // 1) iPhone/Safari: native POST with plain text JSON.
+  return jsonpAsync("save",{data:payload},timeout||12000);
+}
+async function saveViaFallback(record){
+  const payload=JSON.stringify({action:"save",record:record});
   try{
     if(navigator.sendBeacon){
       const blob=new Blob([payload],{type:"text/plain;charset=UTF-8"});
       if(navigator.sendBeacon(CENTRAL_ENDPOINT,blob)) return true;
     }
   }catch(e){}
-  // 2) fetch POST fallback.
   try{
-    await fetch(CENTRAL_ENDPOINT+"?_v=2.8-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload});
-    return true;
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),7000);
+    await fetch(CENTRAL_ENDPOINT+"?_v=2.9-"+Date.now(),{method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,headers:{"Content-Type":"text/plain;charset=UTF-8"},body:payload,signal:controller.signal});
+    clearTimeout(timer);return true;
   }catch(e){}
-  // 3) GET fallback, which Apps Script also accepts.
+  return false;
+}
+async function verifySaved(record){
   try{
-    const u=CENTRAL_ENDPOINT+"?action=save&data="+encodeURIComponent(payload)+"&_v=2.8-"+Date.now();
-    await fetch(u,{method:"GET",mode:"no-cors",cache:"no-store",keepalive:true});
-    return true;
+    const st=await jsonpAsync("status",{login:record.id},7000);
+    return record.tryb==="POST"?!!st.postDone:!!st.pre;
   }catch(e){return false}
 }
-async function finish(){const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta,obszary:answers,typSzkoly:school};let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);$('saveInfo').className='status';$('saveInfo').textContent='Zapisywanie wyniku w bazie centralnej…';const sent=await sendToCentral(record);
-  let confirmed=false;
-  if(sent){
-    try{
-      for(let k=0;k<3;k++){
-        const st=await new Promise((resolve,reject)=>{
-          const cb="jura72h_savecheck_"+Date.now()+"_"+Math.random().toString(36).slice(2);const sc=document.createElement("script");let done=false;
-          const clean=()=>{try{delete window[cb]}catch(e){window[cb]=undefined}try{sc.remove()}catch(e){}};
-          window[cb]=r=>{if(done)return;done=true;clean();resolve(r)};sc.onerror=()=>{if(!done){done=true;clean();reject(new Error("Błąd"))}};
-          sc.src=CENTRAL_ENDPOINT+"?action=status&login="+encodeURIComponent(record.id)+"&callback="+encodeURIComponent(cb)+"&_v=2.8-check-"+Date.now()+"-"+Math.random().toString(36).slice(2);document.body.appendChild(sc);
-          setTimeout(()=>{if(!done){done=true;clean();reject(new Error("Timeout"))}},5000);
-        });
-        confirmed=record.tryb==="POST"?!!st.postDone:!!st.pre;
-        if(confirmed)break;
-        await new Promise(r=>setTimeout(r,700));
-      }
-    }catch(e){}
+async function finish(){
+  const record={id:pid,tryb:mode,wynik:scoreValue,max:10,data:new Date().toISOString(),meta,obszary:answers,typSzkoly:school};
+  let all=JSON.parse(localStorage.getItem(STORAGE)||'[]');all.push(record);localStorage.setItem(STORAGE,JSON.stringify(all));
+  hideAll();$('result').classList.remove('hidden');$('resultSchool').textContent=DATA[school].badge;$('resultMode').textContent=mode;$('score').textContent=scoreValue;$('interpret').textContent=interpret(scoreValue);
+  $('saveInfo').className='status';$('saveInfo').textContent='Zapisywanie wyniku w bazie centralnej…';
+  try{
+    const r=await saveViaJsonp(record,12000);
+    if(r&&r.ok&&r.zapisano){
+      $('saveInfo').textContent='✓ Wynik zapisany i potwierdzony w bazie centralnej.';
+      return;
+    }
+    if(await verifySaved(record)){
+      $('saveInfo').textContent='✓ Wynik jest zapisany i potwierdzony w bazie centralnej.';
+      return;
+    }
+  }catch(e){}
+  const fallback=await saveViaFallback(record);
+  if(fallback){
+    $('saveInfo').className='status';
+    $('saveInfo').textContent='✓ Wynik wysłany do bazy centralnej. Potwierdzenie może pojawić się za chwilę.';
+    setTimeout(async()=>{
+      if(await verifySaved(record)){$('saveInfo').textContent='✓ Wynik zapisany i potwierdzony w bazie centralnej.';$('saveInfo').className='status';}
+    },1200);
+  }else{
+    $('saveInfo').className='status warn';
+    $('saveInfo').textContent='⚠ Wynik zapisany lokalnie. Nie udało się teraz połączyć z bazą centralną — spróbuj ponownie.';
   }
-  $("saveInfo").textContent=confirmed?"✓ Wynik zapisany i potwierdzony w bazie centralnej.":(sent?"✓ Wysłano do bazy centralnej. Trwa potwierdzanie zapisu…":"✓ Wynik zapisany lokalnie. Nie udało się wysłać do bazy centralnej.");
-  if(!confirmed)$("saveInfo").className="status warn"}
+}
+
 function interpret(s){if(s<=3)return'Wynik wskazuje na potrzebę intensywnego rozwijania kompetencji w zakresie krytycznej analizy informacji.';if(s<=5)return'Widoczne są podstawowe kompetencje, ale część sytuacji wymaga dodatkowego ćwiczenia.';if(s<=7)return'Kompetencje są częściowo rozwinięte; warto wzmacniać samodzielne sprawdzanie źródeł i ocenę wiarygodności.';if(s<=9)return'Wynik wskazuje na dobre opanowanie większości badanych zachowań informacyjnych.';return'Wynik wskazuje na bardzo dobre opanowanie badanych zachowań informacyjnych.'}
 function newTest(){hideAll();$('home').classList.remove('hidden')}
 function goHome(){hideAll();$('home').classList.remove('hidden')}
