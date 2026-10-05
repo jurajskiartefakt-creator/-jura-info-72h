@@ -2,7 +2,7 @@
 <html lang="pl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#172554"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="JURA INFO 72H">
-<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.3-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.3</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="jura-info-version" content="UNIVERSAL-MOBILE-3.4-2026-10-05"><title>JURA INFO 72H – badanie diagnostyczne · v3.4</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:auto;padding:16px}.hero{padding:12px 4px 4px}.brand{display:inline-block;background:#dfe7ff;color:#24407f;padding:8px 13px;border-radius:999px;font-weight:900;font-size:14px}h1{font-size:31px;line-height:1.08;margin:16px 0 8px}h2{font-size:22px;margin:4px 0 10px}.lead{font-size:17px;color:#667085;line-height:1.45}.card{background:#fff;border-radius:20px;padding:21px;margin:14px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid{grid-template-columns:1fr}}.choice{border:2px solid #d8e0ef;border-radius:16px;padding:18px;text-align:left;background:#fff;cursor:pointer}.choice strong{display:block;font-size:19px;color:#172554}.choice span{display:block;margin-top:6px;color:#667085;font-size:14px;line-height:1.35}label{display:block;margin:13px 0 6px;font-weight:700}input[type=text],input[type=number],select{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}button{width:100%;padding:14px;border:0;border-radius:12px;background:#172554;color:#fff;font-size:16px;font-weight:800;margin-top:12px;cursor:pointer}button.alt{background:#e2e8f0;color:#172033}button.ghost{background:#fff;color:#172554;border:2px solid #d8e0ef}.small{font-size:13px;color:#667085;line-height:1.4}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#e8eefc;font-size:12px;font-weight:800;margin-right:6px}.hidden{display:none!important}.qnum{color:#667085;font-weight:800}.question{font-size:20px;line-height:1.4;font-weight:800;margin:14px 0}.opt{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #dbe3ef;border-radius:12px;margin:9px 0;font-weight:500;background:#fff}.opt input{width:auto;margin-top:4px;flex:0 0 auto}.score{font-size:54px;font-weight:900;text-align:center;margin:8px}.status{padding:10px 12px;border-radius:11px;background:#f0fdf4;color:#166534;font-size:14px;margin-top:10px}.warn{background:#fff7ed;color:#9a3412}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}.scroll{overflow:auto}.pill{font-size:12px;background:#eef2ff;padding:4px 7px;border-radius:999px;font-weight:800}.footer{padding:15px 4px 30px;color:#667085;font-size:12px}h3{color:#172554;margin:10px 0}.scroll table button{white-space:nowrap}
 </style></head><body><main class="wrap">
@@ -19,6 +19,13 @@
 <section id="quiz" class="card hidden"><div><span class="badge" id="schoolQ"></span><span class="badge" id="mode"></span> <span class="qnum">Pytanie <span id="num"></span>/10</span></div><div class="question" id="question"></div><div id="answers"></div><button id="next" onclick="nextQuestion()">Dalej</button></section>
 <section id="result" class="card hidden"><span class="badge" id="resultSchool"></span><span class="badge" id="resultMode"></span><h2>Wynik badania</h2><div class="score"><span id="score"></span>/10</div><p id="interpret" class="lead"></p><div id="saveInfo" class="status">Zapisywanie wyniku…</div><div id="resultNext"></div><button onclick="newTest()">Nowe badanie</button></section>
 <section id="managerLogin" class="card hidden"><h2>Panel MANAGERA</h2><p class="small">Dostęp wyłącznie dla prowadzącego. Wyniki uczestników nie są wyświetlane na stronie publicznej.</p><label for="managerUser">Login</label><input id="managerUser" type="text" autocomplete="username" value="MANAGER"><label for="managerPass">Hasło</label><input id="managerPass" type="password" autocomplete="current-password" placeholder="Hasło managera"><button onclick="managerLogin()">Zaloguj</button><div id="managerLoginInfo" class="status hidden"></div><button class="ghost" onclick="goHome()">Wróć</button></section>
+
+<div style="margin:10px 0 14px">
+  <label class="opt" style="display:flex;align-items:center;gap:10px">
+    <input id="rememberManager" type="checkbox" style="width:auto">
+    <span>Zapamiętaj dostęp na tym urządzeniu przez 6 godzin</span>
+  </label>
+</div>
 <section id="panel" class="card hidden">
 <h2>Panel MANAGERA</h2>
 <p class="small">Centralne wyniki z Google Sheets. Panel jest dostępny wyłącznie po zalogowaniu managera. Tutaj odblokowujesz POST oraz przeglądasz wyniki cząstkowe i pełne.</p>
@@ -32,7 +39,7 @@
 </section>
 <section id="fullResults" class="card hidden"><div><span class="badge" id="fullLogin"></span><span class="badge" id="fullSchool"></span></div><h2>Pełne wyniki uczestnika</h2><div id="fullSummary"></div><div id="fullDetails"></div><button class="ghost" onclick="backToPanel()">Wróć do panelu</button></section>
 <div class="footer">
-  <b>JURA INFO 72H</b> · <b>wersja centralna 3.3 — BLOKADA POWTÓRNEGO PRE + PREFILL POST + KLASY PP</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
+  <b>JURA INFO 72H</b> · <b>wersja centralna 3.4 — LOGOWANIE MANAGERA UNIVERSAL + ZAPAMIĘTANIE SESJI</b> · model: ZATRZYMAJ → SPRAWDŹ → OCEŃ → ZDECYDUJ → PRZEKAŻ<br><br>
   <b>Wspieraj Stowarzyszenie „Szansa” w Zawierciu</b><br>
   Jesteśmy organizacją pożytku publicznego. Twoje wsparcie pomaga nam prowadzić działania edukacyjne, pomocowe i społeczne.<br>
   <b>Nr konta: 12 1050 1591 1000 0023 2888 4826</b>
@@ -50,7 +57,7 @@ const DATA={
 };
 const STORAGE='jura72h_diag_master_v2';
 let school='',pid='',meta={},mode='',qs=[],i=0,answers=[],scoreValue=0,managerToken='',testStartData='';
-const APP_VERSION='3.3.0';
+const APP_VERSION='3.4.0';
 const UNIVERSAL_STATUS_KEY='jura72h_universal_status';
 const UNIVERSAL_POST_RETURN='https://jurajskiartefakt-creator.github.io/-jura-info-72h/';
 const MANAGER_TOKEN_KEY='jura72h_manager_token';
@@ -205,7 +212,7 @@ function requestPostAccess(){preparePOST()}
 function render(){const q=qs[i];$('num').textContent=i+1;$('question').innerHTML=q.q;$('answers').innerHTML=q.a.map((a,n)=>'<label class="opt"><input type="radio" name="ans" value="'+n+'"><span>'+a+'</span></label>').join('');$('next').textContent=i===qs.length-1?'Zakończ badanie':'Dalej'}
 function nextQuestion(){const el=document.querySelector('input[name="ans"]:checked');if(!el){alert('Wybierz odpowiedź.');return}const q=qs[i],n=Number(el.value);answers.push({q:i+1,qid:school+'_'+mode+'_Q'+(i+1),area:q.area,selected:n,selectedText:String(q.a[n]??''),correctAnswer:q.c,correctText:String(q.a[q.c]??''),correct:n===q.c});if(n===q.c)scoreValue++;i++;if(i<qs.length)render();else finish()}
 function makeJsonpUrl(action,params,cb){
-  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=3.3-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
+  const q=['action='+encodeURIComponent(action),'callback='+encodeURIComponent(cb),'_v=3.4-'+Date.now()+'-'+Math.random().toString(36).slice(2)];
   Object.keys(params||{}).forEach(k=>q.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')));
   return CENTRAL_ENDPOINT+'?'+q.join('&');
 }
@@ -320,28 +327,49 @@ function removePendingRecord(record){
 function interpret(s){if(s<=3)return'Wynik wskazuje na potrzebę intensywnego rozwijania kompetencji w zakresie krytycznej analizy informacji.';if(s<=5)return'Widoczne są podstawowe kompetencje, ale część sytuacji wymaga dodatkowego ćwiczenia.';if(s<=7)return'Kompetencje są częściowo rozwinięte; warto wzmacniać samodzielne sprawdzanie źródeł i ocenę wiarygodności.';if(s<=9)return'Wynik wskazuje na dobre opanowanie większości badanych zachowań informacyjnych.';return'Wynik wskazuje na bardzo dobre opanowanie badanych zachowań informacyjnych.'}
 function newTest(){hideAll();$('home').classList.remove('hidden')}
 function goHome(){hideAll();$('home').classList.remove('hidden')}
-function openManagerLogin(){hideAll();$('managerLogin').classList.remove('hidden');$('managerPass').value='';$('managerLoginInfo').classList.add('hidden')}
+function openManagerLogin(){
+  hideAll();
+  $('managerLogin').classList.remove('hidden');
+  $('managerPass').value='';
+  $('managerLoginInfo').classList.add('hidden');
+  if($('rememberManager')) $('rememberManager').checked=!!localStorage.getItem(MANAGER_TOKEN_KEY);
+}
 function managerLogin(){
   const u=$('managerUser').value.trim()||'MANAGER';
   const p=$('managerPass').value;
-  if(u!=='MANAGER'||!p){
-    $('managerLoginInfo').className='status warn';$('managerLoginInfo').classList.remove('hidden');
-    $('managerLoginInfo').textContent='Podaj login i hasło.';return;
+  if(u.toUpperCase()!=='MANAGER'||!p){
+    $('managerLoginInfo').className='status warn';
+    $('managerLoginInfo').classList.remove('hidden');
+    $('managerLoginInfo').textContent='Podaj login i hasło.';
+    return;
   }
-  $('managerLoginInfo').className='status';$('managerLoginInfo').classList.remove('hidden');
-  $('managerLoginInfo').textContent='Łączenie z bazą centralną…';
-  jsonpAsync('managerLogin',{user:u,password:p},10000).then(r=>{
-    if(r&&r.ok&&r.token){
-      managerToken=r.token;sessionStorage.setItem(MANAGER_TOKEN_KEY,managerToken);
-      $('managerLoginInfo').textContent='Zalogowano.';loadManagerData();return;
-    }
-    $('managerLoginInfo').className='status warn';
-    $('managerLoginInfo').textContent=String((r&&r.error)||'Nieprawidłowy login lub hasło.');
-  }).catch(e=>{
-    $('managerLoginInfo').className='status warn';
-    const msg=String(e&&e.message||'');
-    $('managerLoginInfo').textContent=(msg==='Błąd połączenia'||msg==='Timeout')?'Nie udało się połączyć z bazą centralną. Spróbuj ponownie.':msg;
+  $('managerLoginInfo').className='status';
+  $('managerLoginInfo').classList.remove('hidden');
+  $('managerLoginInfo').textContent='Logowanie…';
+
+  // Uniwersalny login: zwykły POST formularza do Apps Script.
+  // Nie zależy od JSONP/CORS ani od przeglądarki.
+  let form=document.getElementById('managerLoginFormUniversal');
+  if(form) form.remove();
+  form=document.createElement('form');
+  form.id='managerLoginFormUniversal';
+  form.method='POST';
+  form.action=CENTRAL_ENDPOINT;
+  form.target='_top';
+  form.style.display='none';
+
+  [['action','managerLoginPage'],['user',u],['password',p]].forEach(([name,value])=>{
+    const input=document.createElement('input');
+    input.name=name;input.value=value;form.appendChild(input);
   });
+
+  const remember=document.createElement('input');
+  remember.name='remember';
+  remember.value=($('rememberManager')&&$('rememberManager').checked)?'1':'0';
+  form.appendChild(remember);
+
+  document.body.appendChild(form);
+  form.submit();
 }
 function loadManagerData(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
 function parseAreas(value){
@@ -383,7 +411,7 @@ function refreshManager(){
   if(!managerToken){openManagerLogin();return}
   $('managerStats').innerHTML='<p class="small">Pobieranie danych…</p>';
   jsonp('managerData',{token:managerToken},r=>{
-    if(!r||!r.ok){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);alert('Sesja managera wygasła.');openManagerLogin();return}
+    if(!r||!r.ok){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);localStorage.removeItem(MANAGER_TOKEN_KEY);localStorage.removeItem('jura72h_manager_remember');alert('Sesja managera wygasła.');openManagerLogin();return}
     const rows=r.wyniki||[], pre=rows.filter(x=>x.TRYB==='PRE'), post=rows.filter(x=>x.TRYB==='POST'), groups=participantGroups(rows);
     $('managerStats').innerHTML='<p><b>Uczestników:</b> '+groups.length+' · <b>Rekordów:</b> '+rows.length+' · <b>PRE:</b> '+pre.length+' · <b>POST:</b> '+post.length+'</p>';
     $('managerRows').innerHTML=groups.map(g=>{
@@ -413,8 +441,24 @@ function showFullResults(login){
 }
 function backToPanel(){hideAll();$('panel').classList.remove('hidden');refreshManager()}
 function unlockPost(){const login=$('unlockLogin').value.trim();if(!login){alert('Wpisz login uczestnika.');return}jsonp('unlockPost',{token:managerToken,login:login},r=>{const box=$('managerInfo');box.className='status';box.classList.remove('hidden');box.textContent=r&&r.ok?'✓ POST odblokowany dla: '+login:'Nie udało się odblokować: '+((r&&r.error)||'błąd');if(r&&r.ok)refreshManager()})}
-function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);goHome()}
+function managerLogout(){managerToken='';sessionStorage.removeItem(MANAGER_TOKEN_KEY);localStorage.removeItem(MANAGER_TOKEN_KEY);localStorage.removeItem('jura72h_manager_remember');goHome()}
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-(function(){managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';handleUniversalReturn();})();
+(function(){
+  try{
+    const hash=String(location.hash||'');
+    const m=hash.match(/(?:^|&)managerToken=([^&]+)/);
+    if(m){
+      managerToken=decodeURIComponent(m[1]);
+      const remember=(localStorage.getItem('jura72h_manager_remember')==='1');
+      (remember?localStorage:sessionStorage).setItem(MANAGER_TOKEN_KEY,managerToken);
+      history.replaceState(null,document.title,location.pathname+location.search);
+    }else{
+      managerToken=localStorage.getItem(MANAGER_TOKEN_KEY)||sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
+    }
+  }catch(e){
+    managerToken=sessionStorage.getItem(MANAGER_TOKEN_KEY)||'';
+  }
+  handleUniversalReturn();
+})();
 if("serviceWorker" in navigator){ navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{}); }
 </script></body></html>
